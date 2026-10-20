@@ -1,0 +1,87 @@
+<style>
+  /* =========================================================
+     PORTADA SEGURIDAD VIAL EN VEHÍCULOS DE CARGA PESADA · fondo fotográfico + personaje flotante + curva
+     (el CSS de portada viaja por curso — decisión E5)
+     ========================================================= */
+  .cp-portada{
+    position:relative; overflow:hidden; isolation:isolate;
+    min-height:100vh; min-height:100dvh;
+    background:
+      linear-gradient(100deg, color-mix(in srgb, var(--c-deep) 92%, black) 0%,
+                              color-mix(in srgb, var(--c-deep) 55%, transparent) 55%,
+                              color-mix(in srgb, var(--c-deep) 30%, transparent) 100%),
+      url('assets/img/curso/portada-fondo.webp') center/cover no-repeat;
+    display:flex; align-items:center;
+  }
+  .cp-portada__curva{
+    position:absolute; right:-40px; bottom:-30px; width:min(48vw, 640px); z-index:1;
+    pointer-events:none; user-select:none;
+  }
+  .cp-portada__person{
+    position:absolute; right:clamp(16px, 8vw, 140px); bottom:0; height:min(86vh, 780px); z-index:2;
+    pointer-events:none; user-select:none;
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,.45));
+  }
+  .cp-portada__logo{
+    position:absolute; top:28px; right:36px; z-index:4;
+  }
+  .cp-portada__logo img{
+    height:84px; width:auto; display:block;
+    filter: brightness(0) invert(1);   /* placeholder blanco hasta recibir el logo definitivo */
+  }
+  .cp-portada__text{
+    position:relative; z-index:3; max-width:640px;
+    padding: clamp(32px, 6vw, 96px);
+  }
+  .cp-portada__title{
+    margin:0 0 26px; font-family:var(--font-display); line-height:1.04; letter-spacing:-.02em;
+  }
+  .cp-portada__title span{ display:block; }
+  .cp-portada__title .suave { color:var(--c-acento); font-weight:400; font-size:clamp(2.4rem,5vw,4rem); opacity:.95; }
+  .cp-portada__title .fuerte{ color:#fff;            font-weight:800; font-size:clamp(2.6rem,5.6vw,4.4rem); }
+  .cp-portada__title .sigla { color:var(--c-acento); font-weight:800; font-size:clamp(2.4rem,5vw,4rem); }
+  .cp-portada__intro{
+    color:color-mix(in srgb, #fff 82%, transparent); font-size:1.06rem; line-height:1.65;
+    max-width:520px; margin:0 0 36px;
+  }
+  .cp-portada__cta{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--c-acento); color:#fff; text-decoration:none;
+    font-family:var(--font-display); font-weight:700; font-size:1rem;
+    padding:16px 30px; border-radius:999px;
+    box-shadow:0 14px 34px color-mix(in srgb, var(--c-acento) 45%, transparent);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .cp-portada__cta:hover{ transform:translateY(-2px); box-shadow:0 20px 44px color-mix(in srgb, var(--c-acento) 55%, transparent); }
+  /* la persona de este curso trae el simulador (más ancha que la de la semilla): se atenúa desde 1200 px */
+  @media (max-width: 1200px){
+    .cp-portada__person{ opacity:.34; right:-10vw; }
+  }
+  @media (max-width: 900px){
+    .cp-portada__logo img{ height:60px; }
+  }
+</style>
+
+<section class="cp-portada">
+  <img class="cp-portada__curva"  src="assets/img/curso/portada-curva.webp" alt="" aria-hidden="true" />
+  <img class="cp-portada__person" src="assets/img/curso/portada-person.webp" alt="" aria-hidden="true" />
+  <div class="cp-portada__logo" aria-hidden="true">
+    <img src="assets/img/logos/waygroup-for-education.svg" alt="WAYGROUP for education" />
+  </div>
+  <div class="cp-portada__text">
+    <h1 class="cp-portada__title">
+      <span class="suave">Seguridad vial en</span>
+      <span class="fuerte">vehículos de</span>
+      <span class="sigla">carga pesada</span>
+    </h1>
+    <p class="cp-portada__intro">
+      Al finalizar el curso, el participante estará en capacidad de: identificar la normativa y la
+      documentación exigida para operar un vehículo de carga en Colombia; reconocer los factores de
+      riesgo del entorno, del vehículo y del conductor; seleccionar la técnica de conducción defensiva
+      para cada situación; y decidir cuándo detener la marcha y cómo actuar tras un siniestro vial.
+    </p>
+    <a class="cp-portada__cta" href="presentacion.html">
+      Comenzar el curso <iconify-icon icon="mdi:arrow-right"></iconify-icon>
+    </a>
+  </div>
+</section>

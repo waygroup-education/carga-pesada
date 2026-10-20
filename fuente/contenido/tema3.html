@@ -1,0 +1,103 @@
+      <header class="ova-screen__head" data-reveal>
+        <div class="ova-screen__eyebrow">Tema {{NUM}}</div>
+        <h1 class="ova-screen__title">Técnicas de conducción defensiva</h1>
+      </header>
+
+      <p data-reveal>La conducción defensiva es conducir de manera que se eviten siniestros a pesar de los errores de otros y de las condiciones adversas: anticipar, mantener espacio, ver y ser visto, y decidir con margen.</p>
+
+      <!-- Situación de partida · cuadro (tabla 1×1) del Word, después del párrafo de definición como en el DI (D14); sin negrilla (D13) -->
+      <div data-reveal style="margin-top:32px; margin-bottom:40px; padding:32px; background:linear-gradient(135deg, color-mix(in srgb, var(--c-acento) 10%, var(--bg-surface)) 0%, var(--bg-surface) 60%); border:1px solid color-mix(in srgb, var(--c-acento) 30%, var(--border-c)); border-radius:var(--r-lg); position:relative; overflow:hidden;">
+        <h3 style="font-family:var(--font-mono); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--c-acento); margin:0 0 16px; display:flex; align-items:center; gap:10px;"><iconify-icon icon="mdi:comment-question-outline" style="font-size:1.1rem;"></iconify-icon> Situación de partida</h3>
+        <p style="margin:0; font-size:1.02rem; line-height:1.6;">Mientras desciende por una pendiente pronunciada, el conductor de un vehículo pesado advierte que los frenos empiezan a perder eficacia. Sin embargo, decide no reducir la marcha al calcular que falta poco para llegar al llano.</p>
+        <p style="margin:14px 0 0; font-size:1.02rem; line-height:1.6;">Ante este escenario, surge una pregunta clave: si los frenos de servicio fallan por completo en una bajada, ¿con qué alternativas cuenta el conductor para controlar la velocidad del vehículo?</p>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.1 · intersecciones ════ -->
+      <section class="ova-seccion" id="intersecciones" data-reveal>
+        <h2 class="ova-seccion__titulo">Intersecciones, glorietas y adelantamiento</h2>
+        <p class="ova-seccion__lead">Te invitamos a ver el siguiente video, donde aprenderás la técnica correcta para cruzar intersecciones, semáforos y glorietas de forma segura, a bordo de un vehículo de carga pesada.</p>
+      </section>
+
+      <!-- Video 2 (el DI: "(Vincular video 2)"). URL confirmada por el usuario, 2026-10-19 -->
+      <div class="ova-video" data-reveal>
+        <div class="ova-video__frame" style="position:relative; padding-top:56.25%; border-radius:var(--r-lg); overflow:hidden; background:#000;">
+          <iframe src="https://www.youtube.com/embed/rnX4aq4CCQI" title="Video 2 · Intersecciones, glorietas y adelantamiento" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; inset:0; width:100%; height:100%;"></iframe>
+        </div>
+      </div>
+
+      <p data-reveal style="margin-top:32px;">En cada intersección: cuenta la regla de los 3 segundos y verifica espejos y punto ciego antes de arrancar en un semáforo; detente por completo en una señal de pare; cede el paso a quien ya circula en una glorieta. En los giros, el remolque recorre una trayectoria más cerrada que la cabina: revisa los espejos antes de girar y abre el giro sin invadir otro carril más de lo necesario. Al adelantar, nunca lo hagas sobre línea continua, en curvas, pendientes sin visibilidad, intersecciones, puentes, túneles o pasos peatonales.</p>
+
+      <!-- ════ Sección {{NUM}}.2 · condiciones-adversas ════ -->
+      <section class="ova-seccion" id="condiciones-adversas" data-reveal>
+        <h2 class="ova-seccion__titulo">Manejo en condiciones adversas</h2>
+      </section>
+
+      <!-- El DI: "Acordeón" -->
+      <div class="ova-acordeon" data-reveal style="margin-top:0;">
+        <div class="ova-acordeon__item is-open">
+          <button class="ova-acordeon__head"><span><span class="num">01</span> <strong>Ante lluvia</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Reduce la velocidad y mantente atento a la formación de charcos, porque un vehículo pesado que pasa a alta velocidad sobre agua acumulada puede perder tracción por hidroplaneo, un fenómeno en el que las llantas dejan de tener contacto directo con el pavimento. Aumenta al doble la distancia de seguimiento y frena de forma progresiva; en pavimento mojado una frenada brusca puede provocar el efecto tijera.</div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">02</span> <strong>Ante niebla o cualquier condición de baja visibilidad</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Enciende las luces bajas y antiniebla (nunca las altas, que reflejan en la niebla). Si la visibilidad es nula, sal de la calzada a un lugar seguro y enciende las luces de parqueo.</div></div>
+        </div>
+        <!-- PENDIENTE: cuerpo del ítem «En vías destapadas» de 3.2 (dos párrafos «Para un cruce seguro…» / «Para el control
+             de la tracción…»). Detenido por error de origen (ERRORES-ORIGEN-2026-10-19 · D5: «Verifica en el Código quién
+             tiene prelación…» es nota del autor). Se reemplaza el cuerpo cuando llegue corregido del DI. -->
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">03</span> <strong>En vías destapadas</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">
+            <div style="padding:20px; border:1px dashed var(--border-c); background:var(--bg-muted); border-radius:var(--r-md); display:flex; align-items:center; gap:12px;">
+              <iconify-icon icon="mdi:text-box-remove-outline" style="font-size:1.6rem; color:var(--text-mut); flex-shrink:0;"></iconify-icon>
+              <span style="color:var(--text-pri); font-size:.9rem;">Pendiente: ítem En vías destapadas (texto en corrección en el DI)</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">04</span> <strong>En descensos pronunciados</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Antes del descenso, engrana una marcha baja (la misma con la que subirías), activa el freno de motor o de ahogo y usa el freno de servicio de forma intermitente. Nunca bajes en neutro. Si los frenos pierden eficacia, dirígete a la primera rampa de frenado señalizada, diseñada para detener el vehículo con seguridad sin depender del sistema convencional.</div></div>
+        </div>
+      </div>
+
+      <div class="ova-callout ova-callout--success" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:check-circle-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Buena práctica</span><p style="margin:8px 0 0;">Reducir la velocidad de forma preventiva significa adaptar la marcha con anticipación a cualquier factor que disminuya la visibilidad o la adherencia, sea lluvia, niebla o terreno destapado. La clave de la conducción profesional es anticipar el peligro, no reaccionar cuando el riesgo ya es inminente.</p></div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.3 · distancia-actores ════ -->
+      <section class="ova-seccion" id="distancia-actores" data-reveal>
+        <h2 class="ova-seccion__titulo">Distancia, puntos ciegos y actores viales vulnerables</h2>
+        <p class="ova-seccion__lead">Conservar una distancia de seguimiento mínima con el vehículo de adelante es la técnica más simple y más efectiva contra el choque por alcance: usa la regla de al menos 4 segundos en condiciones normales (6 o más con lluvia o carga máxima): elige un punto fijo y cuenta los segundos desde que pasa el vehículo de adelante hasta que pasas tú.</p>
+      </section>
+
+      <!-- Figura 8 del diseñador · F6 pendiente (no bloquea) -->
+      <figure class="ova-figura ova-figura--plana" data-reveal style="margin-top:16px;">
+        <img src="assets/img/curso/figura-08-distancia-detencion.webp" alt="Ejemplo cuantificado: a 80 km/h, con un tiempo de reacción de 1,5 s, el conductor recorre ≈ 33 m antes de empezar a frenar. Distancia de reacción ≈ 33 m. Distancia de frenado ≈ 55 m. Distancia total de detención ≈ 88 m. Entre más pesado el vehículo propio, mayor la distancia de frenado necesaria. ¿Cómo se obtiene la distancia de reacción? 1: 80 km/h ≈ 22,2 m/s. 2: Tiempo de reacción: 1,5 s. 3: 22,2 × 1,5 ≈ 33 m. Deja espacio de sobra con anticipación, no reacciones en el último segundo. Distancia amplia = más seguridad. Muy cerca = riesgo de accidente." />
+      </figure>
+
+      <p data-reveal style="margin-top:32px;">Los peatones y ciclistas son los usuarios más vulnerables en la vía frente a los vehículos pesados, debido a que estos últimos tienen puntos ciegos mucho más extensos que un automóvil. Por esta razón, el conductor tiene la responsabilidad de mantener la atención en la vía para proteger a los peatones. Al adelantar a un ciclista, deja al menos 1,5 m de distancia lateral (Ley 1811 de 2016). Las motocicletas suelen ubicarse en tus puntos ciegos: revisa los espejos antes de cada cambio de carril o giro.</p>
+
+      <!-- Figura 9 del diseñador, tal como llegó (F3 escudo ajeno pendiente) -->
+      <figure class="ova-figura ova-figura--plana" data-reveal style="margin-top:16px;">
+        <img src="assets/img/curso/figura-09-actores-vulnerables.webp" alt="Al adelantar vehículos parqueados que bloquean parcialmente la visibilidad, o al pasar cerca de zonas donde puedan aparecer peatones repentinamente, como frente a locales comerciales, la velocidad debe reducirse de forma preventiva, no reactiva. 1,5 m." />
+      </figure>
+
+      <!-- ════ Sección {{NUM}}.4 · falla-tecnica ════ -->
+      <section class="ova-seccion" id="falla-tecnica" data-reveal>
+        <h2 class="ova-seccion__titulo">Qué hacer ante una falla técnica en ruta</h2>
+        <p class="ova-seccion__lead">Te invitamos a ver el siguiente video instructivo, donde aprenderás a reaccionar correctamente ante emergencias comunes en la vía, tales como pinchazos, alertas de regeneración del filtro de partículas o pérdida de frenos. Además, conocerás qué es el efecto tijera en vehículos articulados y las medidas clave para prevenirlo.</p>
+      </section>
+
+      <!-- Video 3 (el DI: "(Vincular video 3)"). URL confirmada por el usuario, 2026-10-19 -->
+      <div class="ova-video" data-reveal>
+        <div class="ova-video__frame" style="position:relative; padding-top:56.25%; border-radius:var(--r-lg); overflow:hidden; background:#000;">
+          <iframe src="https://www.youtube.com/embed/ZrhgVfz8lnI" title="Video 3 · Qué hacer ante una falla técnica en ruta y el efecto tijera" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; inset:0; width:100%; height:100%;"></iframe>
+        </div>
+      </div>
+
+      <!-- El DI: "Recuerda:" (callout, patrón de riesgo-electrico tema3) -->
+      <div class="ova-callout" style="margin-top:32px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:bell-ring-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Recuerda</span><p style="margin:8px 0 0;">Ante un pinchazo, sujeta el volante y oríllate con precaución antes de detenerte. Si el filtro de partículas pide regeneración, sigue el manual del fabricante. Si los frenos pierden eficacia, usa el freno de motor o de ahogo y dirígete a una rampa de frenado. El efecto tijera ocurre cuando un frenado brusco bloquea las ruedas del remolque y este se pliega contra la cabina; sus causas más frecuentes son el frenado brusco, el exceso de velocidad, la superficie resbaladiza y la carga mal asegurada o mal distribuida. La prevención es frenar de forma progresiva y evitar giros bruscos del volante.</p></div>
+      </div>

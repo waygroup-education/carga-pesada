@@ -1,0 +1,74 @@
+      <header class="ova-screen__head" data-reveal>
+        <div class="ova-screen__eyebrow">Evaluación</div>
+        <h1 class="ova-screen__title">Evaluación</h1>
+      </header>
+
+      <!-- Evaluación estándar: sin cabecera superior; el tema va dentro de cada actividad;
+           la franja inferior lleva anterior · progreso · contador · siguiente.
+           Enunciados, opciones y respuesta correcta: literales del documento de evaluación. -->
+      <div class="ova-evalquiz" data-ova-evalquiz data-label-item="Actividad" data-label-items="actividades" data-reveal>
+
+        <div class="ova-evalquiz__slide is-active" data-slide="intro">
+          <div class="ova-eval__cuerpo">
+            <p class="ova-eval__lead">Dos actividades de ejemplo. Sin nota ni tiempo límite; puedes repetirla las veces que quieras.</p>
+            <div class="ova-eval__datos">
+              <div class="ova-eval__dato"><span class="v">2</span><span class="l">actividades</span></div>
+              <div class="ova-eval__dato"><span class="v">2</span><span class="l">tipos: selección múltiple y emparejamiento</span></div>
+              <div class="ova-eval__dato"><span class="v"><iconify-icon icon="mdi:message-reply-text-outline"></iconify-icon></span><span class="l">retroalimentación en cada respuesta, aciertes o no</span></div>
+            </div>
+            <button class="ova-evalquiz__btn ova-evalquiz__btn--primary" data-evalquiz-go="1">Comenzar <iconify-icon icon="mdi:arrow-right"></iconify-icon></button>
+            <p class="ova-eval__ayuda">También puedes moverte con las flechas del teclado.</p>
+          </div>
+        </div>
+
+        <div class="ova-evalquiz__slide" data-slide="sm-1" data-section="Selección múltiple" data-section-color="acento">
+          <div class="ova-eval__cuerpo">
+            <span class="ova-eval__tema">Tema 1 — Título del tema</span>
+            <div class="ova-quiz">
+              <p class="ova-eval__contexto">Contexto o caso de la pregunta, literal del documento de evaluación.</p>
+              <h3 class="ova-quiz__question">¿Enunciado de la pregunta?</h3>
+              <div class="ova-quiz__opts">
+                <button class="ova-quiz__opt" data-correct="true"><strong>A.</strong> Opción correcta.</button>
+                <button class="ova-quiz__opt" data-correct="false"><strong>B.</strong> Opción incorrecta.</button>
+                <button class="ova-quiz__opt" data-correct="false"><strong>C.</strong> Opción incorrecta.</button>
+              </div>
+              <div class="ova-quiz__feedback"
+                   data-correct="Por qué esta opción es la indicada, explicado con el contenido del curso."
+                   data-wrong="Qué revisar y en qué tema está, sin dar la respuesta de forma seca."></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ova-evalquiz__slide" data-slide="emp-1" data-section="Emparejamiento" data-section-color="info">
+          <div class="ova-eval__cuerpo">
+            <span class="ova-eval__tema">Tema 1 — Título del tema</span>
+            <h3 class="ova-quiz__question">Relaciona cada concepto con su definición</h3>
+            <p class="ova-eval__instruccion">Toca un concepto y después su definición.</p>
+            <div class="ova-empar">
+              <div class="ova-empar__col">
+                <button class="ova-empar__item" data-ova-match="A">Concepto uno</button>
+                <button class="ova-empar__item" data-ova-match="B">Concepto dos</button>
+              </div>
+              <div class="ova-empar__col">
+                <button class="ova-empar__item" data-ova-match="B">Definición del concepto dos.</button>
+                <button class="ova-empar__item" data-ova-match="A">Definición del concepto uno.</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ova-evalquiz__slide" data-slide="cierre">
+          <div class="ova-eval__cuerpo">
+            <h2>Evaluación completada</h2>
+            <p style="max-width:60ch;">Repasar las retroalimentaciones vale tanto como acertar.</p>
+            <button class="ova-evalquiz__btn" data-evalquiz-restart style="margin-top:22px;"><iconify-icon icon="mdi:refresh"></iconify-icon> Volver a intentarlo</button>
+          </div>
+        </div>
+
+        <div class="ova-evalquiz__nav" data-evalquiz-nav>
+          <button class="ova-evalquiz__btn ova-evalquiz__btn--prev" data-evalquiz-prev aria-label="Actividad anterior" title="Anterior"><iconify-icon icon="mdi:arrow-left"></iconify-icon></button>
+          <div class="ova-evalquiz__progress-bar"><div class="ova-evalquiz__progress-fill" data-evalquiz-progress></div></div>
+          <span class="ova-evalquiz__counter" data-evalquiz-counter></span>
+          <button class="ova-evalquiz__btn ova-evalquiz__btn--primary" data-evalquiz-next>Siguiente <iconify-icon icon="mdi:arrow-right"></iconify-icon></button>
+        </div>
+      </div>

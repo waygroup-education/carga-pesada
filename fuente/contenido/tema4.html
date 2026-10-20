@@ -1,0 +1,94 @@
+      <header class="ova-screen__head" data-reveal>
+        <div class="ova-screen__eyebrow">Tema {{NUM}}</div>
+        <h1 class="ova-screen__title">Actuar ante una emergencia</h1>
+      </header>
+
+      <!-- Situación de partida · cuadro (tabla 1×1) del Word: un solo párrafo, sin negrilla (D13) -->
+      <div data-reveal style="margin-bottom:40px; padding:32px; background:linear-gradient(135deg, color-mix(in srgb, var(--c-acento) 10%, var(--bg-surface)) 0%, var(--bg-surface) 60%); border:1px solid color-mix(in srgb, var(--c-acento) 30%, var(--border-c)); border-radius:var(--r-lg); position:relative; overflow:hidden;">
+        <h3 style="font-family:var(--font-mono); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--c-acento); margin:0 0 16px; display:flex; align-items:center; gap:10px;"><iconify-icon icon="mdi:comment-question-outline" style="font-size:1.1rem;"></iconify-icon> Situación de partida</h3>
+        <p style="margin:0; font-size:1.02rem; line-height:1.6;">Pasada la medianoche, en una vía rural sin iluminación, un conductor siente un golpe en la llanta trasera derecha del remolque y el vehículo empieza a vibrar. No hay arcén amplio ni señalización cercana, y otro vehículo se aproxima por detrás. Detente a pensar: ¿cómo se debe inmovilizar y señalizar el vehículo para no convertirse en un peligro adicional para quienes circulan detrás?</p>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.1 · detener-marcha ════ -->
+      <section class="ova-seccion" id="detener-marcha" data-reveal>
+        <h2 class="ova-seccion__titulo">Cuándo detener la marcha</h2>
+        <p class="ova-seccion__lead">Existen situaciones críticas que exigen detener el vehículo de inmediato. Ante el riesgo, la distancia restante para llegar a tu destino pasa a un segundo plano.</p>
+      </section>
+
+      <!-- El DI: "Stepper" (D12: cinco situaciones sin orden; manda el rótulo, precedente montacargas tema4). Sin ova-step__tag -->
+      <div class="ova-stepper" data-reveal>
+        <div class="ova-step">
+          <div class="ova-step__num"><span>01</span></div>
+          <div class="ova-step__card"><h3>Tolerancia cero al alcohol</h3><p>Si consumiste alcohol antes de la jornada, la única acción correcta es no conducir. Los cuatro grados de alcoholemia (revisados en el numeral 2.3) sancionan desde el nivel más bajo. Ninguno de ellos es compatible con una conducción segura.</p></div>
+        </div>
+        <div class="ova-step">
+          <div class="ova-step__num"><span>02</span></div>
+          <div class="ova-step__card"><h3>Alerta de microsueño</h3><p>Si detectas los primeros síntomas de cansancio, como pesadez en los párpados o pérdida momentánea de atención, oríllate con precaución y detente de inmediato. No intentes forzar la marcha hasta el siguiente punto de descanso; el sueño no se puede controlar.</p></div>
+        </div>
+        <div class="ova-step">
+          <div class="ova-step__num"><span>03</span></div>
+          <div class="ova-step__card"><h3>Alarma de baja presión de aire o testigos rojos en el tablero</h3><p>Si se enciende la alarma de baja presión de aire, o un testigo rojo de temperatura o presión de aceite, detente de inmediato en un lugar seguro. No sigas conduciendo con una advertencia crítica activa.</p></div>
+        </div>
+        <div class="ova-step">
+          <div class="ova-step__num"><span>04</span></div>
+          <div class="ova-step__card"><h3>Carga desplazada, pinchazo o vibración anormal</h3><p>Si notas una vibración anormal, pérdida de control direccional o sospechas que la carga se desplazó, oríllate con precaución y verifica antes de continuar.</p></div>
+        </div>
+        <div class="ova-step">
+          <div class="ova-step__num"><span>05</span></div>
+          <div class="ova-step__card"><h3>Síntomas de fatiga, de salud o visibilidad nula</h3><p>Si sientes malestar, dolor o cualquier síntoma que afecte tu capacidad de conducir, o si la visibilidad se reduce a cero, detén la marcha de inmediato.</p></div>
+        </div>
+      </div>
+
+      <!-- Cierre del caso de partida · mismo panel que la Situación de partida, sin rótulo (el DI no lo trae) -->
+      <div data-reveal style="margin-top:32px; padding:32px; background:linear-gradient(135deg, color-mix(in srgb, var(--c-acento) 10%, var(--bg-surface)) 0%, var(--bg-surface) 60%); border:1px solid color-mix(in srgb, var(--c-acento) 30%, var(--border-c)); border-radius:var(--r-lg); position:relative; overflow:hidden;">
+        <p style="margin:0; font-size:1.02rem; line-height:1.6;">Volviendo al caso de la situación de partida: una falla en ruta no avisa. Lo que distingue a un conductor preparado es reaccionar con el protocolo correcto, no con improvisación.</p>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.2 · despues-siniestro ════ -->
+      <section class="ova-seccion" id="despues-siniestro" data-reveal>
+        <h2 class="ova-seccion__titulo">Qué hacer después de un siniestro vial</h2>
+        <p class="ova-seccion__lead">Ante cualquier incidente vial, como una colisión, un frenado brusco o una maniobra evasiva, la prioridad es actuar con calma y seguir estos pasos fundamentales:</p>
+      </section>
+
+      <!-- Los dos párrafos de pasos del Word (sin lista ni rótulo; D12) en la caja de lista de tema2, texto sin partir -->
+      <div data-reveal style="margin-top:0; padding:24px 28px; background:var(--bg-surface); border:1px solid var(--border-c); border-radius:var(--r-md);"><ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;"><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:arrow-right-circle-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Detén el vehículo, enciende las luces de parqueo y apaga el motor.</span></li><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:arrow-right-circle-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Ponte el chaleco reflectivo antes de bajar; instala los triángulos a la distancia reglamentaria; verifica el estado de las personas sin mover a los lesionados; llama al 123 o al #767; reporta el siniestro a tu empresa.</span></li></ul></div>
+
+      <div class="ova-callout" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:information-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Importante</span><p style="margin:8px 0 0;">Si el siniestro ocurre en tu jornada o desplazamiento laboral, es un accidente de trabajo: tu empresa debe reportarlo a la ARL y a la EPS dentro de los 2 días hábiles siguientes e investigarlo (Resolución 1401 de 2007). Reporta de inmediato a tu jefe cualquier siniestro o incidente.</p></div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.3 · evidencia-reporte ════ -->
+      <section class="ova-seccion" id="evidencia-reporte" data-reveal>
+        <h2 class="ova-seccion__titulo">Qué hacer en el lugar del accidente: evidencia y reporte</h2>
+        <p class="ova-seccion__lead">Desde la Ley 2251 de 2022 (art. 16, que modificó el artículo 143 del Código), en choques con solo daños materiales los conductores deben recaudar las pruebas y retirar de inmediato los vehículos. La autoridad solo interviene si hay lesionados o víctimas.</p>
+      </section>
+      <p data-reveal>Hoy en día, la responsabilidad de recaudar las pruebas recae completamente en los conductores. Para que el reclamo ante la aseguradora o un eventual proceso legal sea válido, debemos recopilar la siguiente evidencia en el sitio:</p>
+
+      <!-- Lista de viñetas del Word; los rótulos van sin negrilla, como en el Word (D13) -->
+      <div data-reveal style="margin-top:16px; padding:24px 28px; background:var(--bg-surface); border:1px solid var(--border-c); border-radius:var(--r-md);"><ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;"><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:clipboard-check-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Fotografías y videos. Registra en detalle la posición de los vehículos, los daños sufridos, la señalización vial y las condiciones de la calle.</span></li><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:clipboard-check-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Información de contacto. Solicita los nombres y números telefónicos de los testigos presentes.</span></li><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:clipboard-check-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Datos del otro conductor y vehículo. Foto de la placa, licencia de conducción, licencia de tránsito, documento de identidad y SOAT.</span></li></ul></div>
+
+      <!-- PENDIENTE: «Botón: Modal» de 4.3 «¿Cuándo se pueden mover los vehículos?». Detenido por error de origen
+           (ERRORES-ORIGEN-2026-10-19 · D6: nota del autor «(verificar la vigencia del artículo 144)»; D10: rótulo «Botón:
+           Modal»). Cuando llegue: si es modal, botón ova-btn--outline centrado + ova-modal#modal-mover-vehiculos (como en
+           tema2); si es recuadro, ova-callout. -->
+      <div data-reveal style="margin-top:24px; padding:28px 24px; border:1px dashed var(--border-c); background:var(--bg-muted); border-radius:var(--r-lg); display:flex; align-items:center; gap:12px;">
+        <iconify-icon icon="mdi:text-box-remove-outline" style="font-size:1.8rem; color:var(--text-mut);"></iconify-icon>
+        <span style="color:var(--text-pri); font-size:.9rem;">Pendiente: ventana ¿Cuándo se pueden mover los vehículos? (texto en corrección en el DI)</span>
+      </div>
+
+      <div class="ova-callout" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:information-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Importante</span><p style="margin:8px 0 0;">Si hay personas lesionadas, la prioridad cambia por completo: no muevas los vehículos ni alteres la escena. Comunícate de inmediato con las líneas de emergencia y la autoridad de tránsito. En este caso, la intervención policial sí es obligatoria.</p></div>
+      </div>
+
+      <!-- Pódcast · NO está en el DI (ERRORES-ORIGEN M2). Por decisión del usuario (2026-10-19) va tras 4.3 con la frase de la
+           cartilla (p. 34) y el enlace confirmado; capa editorial a validar por el cliente. Va como video (es YouTube), igual
+           que en montacargas tema4. -->
+      <h3 style="margin:48px 0 16px;" data-reveal>Pódcast</h3>
+      <p data-reveal>Te invitamos a escuchar el siguiente pódcast, el cual refuerza los aprendizajes clave del curso.</p>
+      <div class="ova-video" data-reveal style="margin-top:16px;">
+        <div class="ova-video__frame" style="position:relative; padding-top:56.25%; border-radius:var(--r-lg); overflow:hidden; background:#000;">
+          <iframe src="https://www.youtube.com/embed/73dP4HkaXjU" title="Pódcast · Seguridad vial en vehículos de carga pesada" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; inset:0; width:100%; height:100%;"></iframe>
+        </div>
+      </div>

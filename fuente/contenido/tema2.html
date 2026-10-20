@@ -1,0 +1,156 @@
+      <header class="ova-screen__head" data-reveal>
+        <div class="ova-screen__eyebrow">Tema {{NUM}}</div>
+        <h1 class="ova-screen__title">Factores de riesgo en la conducción</h1>
+      </header>
+
+      <!-- Situación de partida · cuadro (tabla 1×1) del Word: un solo párrafo, sin negrilla (ERRORES-ORIGEN D13) -->
+      <div data-reveal style="margin-bottom:40px; padding:32px; background:linear-gradient(135deg, color-mix(in srgb, var(--c-acento) 10%, var(--bg-surface)) 0%, var(--bg-surface) 60%); border:1px solid color-mix(in srgb, var(--c-acento) 30%, var(--border-c)); border-radius:var(--r-lg); position:relative; overflow:hidden;">
+        <h3 style="font-family:var(--font-mono); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--c-acento); margin:0 0 16px; display:flex; align-items:center; gap:10px;"><iconify-icon icon="mdi:comment-question-outline" style="font-size:1.1rem;"></iconify-icon> Situación de partida</h3>
+        <p style="margin:0; font-size:1.02rem; line-height:1.6;">Un conductor decide seguir su ruta de noche aunque siente los párpados pesados; confía en que le falta poco y en que ya ha manejado cansado otras veces. Detente a pensar: a 80 km/h, ¿cuántos metros recorre un camión durante un microsueño de tres segundos? ¿Por qué la experiencia no protege del sueño?</p>
+      </div>
+
+      <p data-reveal>Antes de analizar los factores de riesgo, conviene diferenciar dos términos que se confunden con frecuencia, según el Decreto 1072 de 2015 (art. 2.2.4.6.2) y la Guía Técnica Colombiana GTC 45:</p>
+
+      <!-- El DI: "Comparativo" -->
+      <div class="ova-vs" data-reveal style="margin-top:16px;">
+        <div class="ova-vs__card">
+          <h3>PELIGRO</h3>
+          <p>Es la característica intrínseca del vehículo que tiene el potencial de causar daño, sin importar la situación del momento. Involucra variables fijas como su peso, altura y puntos ciegos. Un vehículo pesado representa este peligro incluso si está completamente apagado y estacionado.</p>
+        </div>
+        <div class="ova-vs__divider">VS</div>
+        <div class="ova-vs__card ova-vs__card--alt">
+          <h3>RIESGO</h3>
+          <p>Es la probabilidad de que ese peligro se materialice en un accidente, combinada con la gravedad de sus consecuencias. Un camión estacionado tiene el mismo peligro (su tamaño y peso) que uno en movimiento por una carretera de montaña, pero el riesgo en ambos escenarios es completamente diferente.</p>
+        </div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.1 · factores-entorno ════ -->
+      <section class="ova-seccion" id="factores-entorno" data-reveal>
+        <h2 class="ova-seccion__titulo">Factores del entorno: ambientales y viales</h2>
+        <p class="ova-seccion__lead">La seguridad vial depende de la interacción de tres factores, conocidos como la trilogía vial: el entorno, el vehículo y el conductor.</p>
+      </section>
+      <p data-reveal>Dentro de los factores del entorno, los de carácter ambiental abarcan todas las condiciones climáticas y de la naturaleza que alteran el comportamiento de la vía y la conducción. Entre ellos se destacan:</p>
+
+      <!-- Figura 6 del diseñador, tal como llegó (F3 escudo ajeno pendiente · F7 no bloquea); la lista está en la figura (D9) -->
+      <figure class="ova-figura ova-figura--plana" data-reveal style="margin-top:16px;">
+        <img src="assets/img/curso/figura-06-factores-ambientales.webp" alt="Las condiciones climáticas como la lluvia, la neblina, los vientos fuertes o el granizo, que afectan la visibilidad y la adherencia de los neumáticos. Los fenómenos naturales peligrosos, como terremotos, inundaciones o deslizamientos, que pueden comprometer la infraestructura vial; la presencia de animales en la vía, especialmente en zonas rurales. El ciclo diurno-nocturno, cuya transición de luz también afecta la visibilidad." />
+      </figure>
+
+      <p data-reveal style="margin-top:32px;">Los factores viales abarcan las condiciones de la infraestructura, entre las cuales se destacan:</p>
+      <div data-reveal style="margin-top:16px; padding:24px 28px; background:var(--bg-surface); border:1px solid var(--border-c); border-radius:var(--r-md);"><ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;"><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:alert-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>El estado de la calzada: superficies mojadas, resbaladizas o con deterioros estructurales.</span></li><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:alert-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>La topografía del terreno: curvas peligrosas, así como pendientes pronunciadas de ascenso o descenso que alteran el control y la capacidad de frenado del vehículo.</span></li><li style="display:flex; gap:10px; align-items:flex-start;"><iconify-icon icon="mdi:alert-outline" style="color:var(--c-acento); font-size:1.1rem; margin-top:3px; flex-shrink:0;"></iconify-icon><span>Restricciones de gálibo y de peso en puentes, obras y cierres, ausencia de berma y tráfico mixto con motocicletas.</span></li></ul></div>
+
+      <div class="ova-callout" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:lightbulb-on"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Ten en cuenta</span><p style="margin:8px 0 0;">La ausencia de una señalización adecuada intensifica estos peligros, dado que priva al conductor de la alerta anticipada necesaria para reaccionar a tiempo.</p></div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.2 · factores-mecanicos ════ -->
+      <section class="ova-seccion" id="factores-mecanicos" data-reveal>
+        <h2 class="ova-seccion__titulo">Factores mecánicos del vehículo: componentes críticos de seguridad</h2>
+      </section>
+
+      <!-- El DI: "Acordeón" -->
+      <div class="ova-acordeon" data-reveal style="margin-top:0;">
+        <div class="ova-acordeon__item is-open">
+          <button class="ova-acordeon__head"><span><span class="num">01</span> <strong>Neumáticos</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Los neumáticos en mal estado, desgastados o con una presión inadecuada comprometen gravemente la adherencia al asfalto, reducen la estabilidad lateral y prolongan la distancia de frenado, elevando de forma crítica el riesgo de accidentes.</div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">02</span> <strong>Sistema de frenos</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">
+            <p style="margin:0;">Componentes defectuosos, como zapatas desgastadas, frenos desajustados, fugas de aire o agua acumulada en los tanques (que debe purgarse a diario), reducen directamente la capacidad de detención del vehículo, cuya masa ya exige de por sí un espacio de frenado considerablemente mayor que el de un automóvil.</p>
+            <p style="margin:12px 0 0;">La mayoría de los vehículos pesados, en especial los articulados, usan frenos de aire. En este sistema, un compresor presuriza el aire y lo almacena en depósitos; al accionar el pedal, esta presión se libera hacia las cámaras de frenado, empujando las zapatas contra el tambor de cada rueda. Se prefiere el aire sobre el líquido de frenos por su fuente ilimitada de aire, la facilidad de acople con remolques y el diseño a prueba de fallas; el líquido de frenos, en cambio, puede perder eficacia por la fatiga térmica (fading), que afecta tambores y zapatas en ambos sistemas. Además, el sistema de aire incorpora una reserva de seguridad activa: si la presión baja, se enciende una alarma y debes detenerte de inmediato en un lugar seguro; si la presión sigue cayendo, los frenos de resorte se aplican solos, lo que puede bloquear ruedas en marcha.</p>
+          </div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">03</span> <strong>Suspensión y dirección</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Una suspensión deficiente deteriora la estabilidad y la amortiguación del vehículo, especialmente al transitar por terrenos irregulares o con carga máxima. Por su parte, un fallo en el sistema de dirección puede derivar en una pérdida total del control del vehículo, impidiendo cualquier maniobra evasiva.</div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">04</span> <strong>Sistema de iluminación y señalización</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Las luces y señales direccionales defectuosas o sucias disminuyen drásticamente la visibilidad del conductor en entornos oscuros o climas adversos. Asimismo, anulan la capacidad de comunicar las intenciones de maniobra a los demás usuarios de la vía, provocando colisiones por alcance.</div></div>
+        </div>
+        <div class="ova-acordeon__item">
+          <button class="ova-acordeon__head"><span><span class="num">05</span> <strong>Transmisión y niveles de fluidos</strong></span><iconify-icon class="ova-acordeon__chev" icon="mdi:chevron-down"></iconify-icon></button>
+          <div class="ova-acordeon__body"><div class="ova-acordeon__body-inner">Las fallas en la transmisión perjudican la fluidez y la eficiencia en el cambio de marchas, lo que incrementa el desgaste del motor y el consumo de combustible. Paralelamente, mantener niveles deficientes de fluidos vitales, como el aceite de motor, el líquido refrigerante o el fluido de frenos, compromete severamente el rendimiento técnico, acorta la vida útil de los componentes y expone al vehículo a averías catastróficas en ruta. Una falla de la transmisión en un descenso impide usar el freno de motor y puede dejar el vehículo en neutro, sin retención.</div></div>
+        </div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.3 · factor-humano ════ -->
+      <section class="ova-seccion" id="factor-humano" data-reveal>
+        <h2 class="ova-seccion__titulo">El factor humano</h2>
+      </section>
+
+      <!-- Situación de partida (factor humano) · cuadro (tabla 1×1) del Word; mismo panel que la del tema (D14) -->
+      <div data-reveal style="margin-top:0; margin-bottom:32px; padding:32px; background:linear-gradient(135deg, color-mix(in srgb, var(--c-acento) 10%, var(--bg-surface)) 0%, var(--bg-surface) 60%); border:1px solid color-mix(in srgb, var(--c-acento) 30%, var(--border-c)); border-radius:var(--r-lg); position:relative; overflow:hidden;">
+        <h3 style="font-family:var(--font-mono); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--c-acento); margin:0 0 16px; display:flex; align-items:center; gap:10px;"><iconify-icon icon="mdi:comment-question-outline" style="font-size:1.1rem;"></iconify-icon> Situación de partida (factor humano)</h3>
+        <p style="margin:0; font-size:1.02rem; line-height:1.6;">Un conductor recuerda que ha consumido alcohol antes de iniciar su jornada; sin embargo, al sentirse en perfectas condiciones, asume que puede manejar con precaución durante el primer tramo del viaje.</p>
+        <p style="margin:14px 0 0; font-size:1.02rem; line-height:1.6;"><strong>Antes de avanzar, reflexionemos:</strong> ¿Por qué la percepción de “sentirse bien” no es un indicador confiable de nuestras capacidades, cuando estamos bajo los efectos del alcohol o de una fatiga extrema?</p>
+      </div>
+
+      <!-- PENDIENTE: párrafo «El cansancio y la fatiga…Su consecuencia más crítica y peligrosa es el» + Modal «Microsueño».
+           Detenido por error de origen (ERRORES-ORIGEN-2026-10-19 · D8: frase cortada «…es el»). Cuando llegue corregido:
+            + modal patrón montacargas tema1 (#modal-microsueno). -->
+      <div data-reveal style="margin-top:0; padding:28px 24px; border:1px dashed var(--border-c); background:var(--bg-muted); border-radius:var(--r-lg); display:flex; align-items:center; gap:12px;">
+        <iconify-icon icon="mdi:text-box-remove-outline" style="font-size:1.8rem; color:var(--text-mut);"></iconify-icon>
+        <span style="color:var(--text-pri); font-size:.9rem;">Pendiente: párrafo sobre el cansancio y la fatiga y modal Microsueño (texto en corrección en el DI)</span>
+      </div>
+
+      <div class="ova-callout ova-callout--success" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:check-circle-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Buena práctica</span><p style="margin:8px 0 0;">Para prevenir la fatiga, se recomienda realizar pausas activas y descansar cada 2 horas de conducción o cada 150 a 200 kilómetros de recorrido, lo que ocurra primero. Como exige el PESV (Res. 20223040040595 de 2022), tu empresa debe tener una política de horas de conducción y descanso dentro del marco del Código Sustantivo del Trabajo.</p></div>
+      </div>
+
+      <p data-reveal style="margin-top:32px;">Otros factores de riesgo vial son:</p>
+      <!-- El DI: "Carrusel" -->
+      <div class="ova-carrusel ova-carrusel--tarjetas" data-reveal style="margin-top:16px;">
+        <div class="ova-carrusel__track-wrap"><div class="ova-carrusel__track">
+          <div class="ova-carrusel__slide"><iconify-icon icon="mdi:cellphone-message"></iconify-icon><h4>Distracciones al volante</h4><p>Actividades como hablar por teléfono o enviar mensajes de texto reducen drásticamente la concentración en la vía y aumentan el tiempo de reacción.</p></div>
+          <div class="ova-carrusel__slide"><iconify-icon icon="mdi:emoticon-angry-outline"></iconify-icon><h4>Estado emocional</h4><p>Emociones intensas como el enojo, la ansiedad o el estrés alteran la toma de decisiones e impiden afrontar el tráfico de manera segura y calmada.</p></div>
+          <div class="ova-carrusel__slide"><iconify-icon icon="mdi:liquor"></iconify-icon><h4>Consumo de sustancias</h4><p>El alcohol, las drogas o ciertos medicamentos deterioran gravemente la coordinación motriz, los reflejos y las habilidades cognitivas necesarias para conducir.</p></div>
+          <div class="ova-carrusel__slide"><iconify-icon icon="mdi:speedometer"></iconify-icon><h4>Velocidad inadecuada</h4><p>La Ley 2251 de 2022 fija en 80 km/h la velocidad máxima para vehículos de carga en carreteras nacionales y departamentales, y en 50 km/h en vías urbanas, salvo señalización de menor velocidad. Exceder los límites permitidos o no adaptarse a las condiciones del entorno incrementa la distancia de frenado y multiplica la gravedad de cualquier siniestro vial.</p></div>
+          <div class="ova-carrusel__slide"><iconify-icon icon="mdi:seatbelt"></iconify-icon><h4>No usar el cinturón de seguridad (obligatorio, Ley 769 de 2002, art. 82)</h4><p>No usar el cinturón de seguridad reduce drásticamente tu protección ante un choque. El artículo 82 de la Ley 769 de 2002 exige su uso permanente, tanto en la cabina como en los asientos traseros si los hay.</p></div>
+        </div></div>
+        <div class="ova-carrusel__nav"><div class="ova-carrusel__dots"></div><div class="ova-carrusel__arrows"><button class="ova-carrusel__arrow" data-ova-carrusel-prev><iconify-icon icon="mdi:arrow-left"></iconify-icon></button><button class="ova-carrusel__arrow" data-ova-carrusel-next><iconify-icon icon="mdi:arrow-right"></iconify-icon></button></div></div>
+      </div>
+
+      <!-- PENDIENTE: «Marco legal» de 2.3 (Ley 1696 de 2013, grados de alcoholemia). Detenido por error de origen
+           (ERRORES-ORIGEN-2026-10-19 · D4: nota del autor «(verificar texto vigente del parágrafo)» dentro del texto).
+           Cuando llegue corregido: eyebrow con filete Marco legal + , bloque aparte (D11). -->
+      <div data-reveal style="margin-top:32px; padding:28px 24px; border:1px dashed var(--border-c); background:var(--bg-muted); border-radius:var(--r-lg); display:flex; align-items:center; gap:12px;">
+        <iconify-icon icon="mdi:text-box-remove-outline" style="font-size:1.8rem; color:var(--text-mut);"></iconify-icon>
+        <span style="color:var(--text-pri); font-size:.9rem;">Pendiente: Marco legal (texto en corrección en el DI)</span>
+      </div>
+
+      <!-- Figura 7 del diseñador · F5 pendiente (no bloquea) -->
+      <figure class="ova-figura ova-figura--plana" data-reveal style="margin-top:24px;">
+        <img src="assets/img/curso/figura-07-grados-alcoholemia.webp" alt="Norma legal (art. 152): las sanciones aplican desde 20 mg de etanol por cada 100 mL de sangre. Política de la empresa: cero tolerancia al alcohol para conducir. Primera vez. Grado 0. Rango: 20–39 mg/100 mL. Multa: 90 SMDLV. Suspensión: 1 año. Otras medidas: 20 h de acciones comunitarias + inmovilización 1 día hábil. Grado 1. Rango: 40–99 mg/100 mL. Multa: 180 SMDLV. Suspensión: 3 años. Otras medidas: 30 h de acciones comunitarias + inmovilización 3 días hábiles. Grado 2. Rango: 100–149 mg/100 mL. Multa: 360 SMDLV. Suspensión: 5 años. Otras medidas: 40 h de acciones comunitarias + inmovilización 6 días hábiles. Grado 3. Rango: 150 mg/100 mL o más. Multa: 720 SMDLV. Suspensión: 10 años. Otras medidas: 50 h de acciones comunitarias + inmovilización 10 días hábiles. Valores resumidos para primera vez, según el artículo 152 del Código Nacional de Tránsito." />
+      </figure>
+
+      <div class="ova-callout" style="margin-top:32px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:information-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Importante</span><p style="margin:8px 0 0;">Si consumiste alcohol, no conduzcas: la decisión correcta es no iniciar la marcha, sin importar cuánto hayas tomado. En la empresa, la tolerancia es cero, aunque la ley sancione desde 20 mg/100 ml.</p></div>
+      </div>
+
+      <!-- ════ Sección {{NUM}}.4 · inspeccion-preoperacional ════ (título sin negrilla en el Word: D13) -->
+      <section class="ova-seccion" id="inspeccion-preoperacional" data-reveal>
+        <h2 class="ova-seccion__titulo">Inspección preoperacional: controlar los factores mecánicos</h2>
+        <p class="ova-seccion__lead">El proceso preoperacional es la secuencia de verificaciones que se realizan antes de poner en marcha un vehículo para garantizar su seguridad y su rendimiento óptimo. Esta inspección técnica incluye revisar el estado general de la carrocería, los niveles de fluidos como combustible y aceite, el estado de los neumáticos y el correcto funcionamiento de las luces, los frenos y el sistema de dirección, así como la presión de aire y la alarma de baja presión, la purga de los tanques de aire, el acople quinta rueda–king pin, las conexiones de aire y eléctricas del remolque, el amarre de la carga, los espejos, el cinturón y el equipo de prevención. El registro diario de esta inspección debe quedar en el formato del PESV.</p>
+      </section>
+
+      <!-- El DI: "Modal: Objetivo de la inspección" -->
+      <div data-reveal style="text-align:center; margin-top:16px;"><button class="ova-btn ova-btn--outline" data-ova-modal-open="modal-objetivo-inspeccion"><iconify-icon icon="mdi:clipboard-check-outline"></iconify-icon> Objetivo de la inspección</button></div>
+      <div class="ova-modal" id="modal-objetivo-inspeccion"><div class="ova-modal__dialog">
+        <div class="ova-modal__head"><h3>Objetivo de la inspección</h3><button class="ova-modal__close" data-ova-modal-close><iconify-icon icon="mdi:close"></iconify-icon></button></div>
+        <div class="ova-modal__body"><p>El objetivo principal es detectar fallas mecánicas de forma preventiva, evitando que afecten la seguridad de la vía o el rendimiento del vehículo durante la operación.</p></div>
+        <div class="ova-modal__foot"><button class="ova-btn ova-btn--outline" data-ova-modal-close>Cerrar</button></div>
+      </div></div>
+
+      <!-- D11: el Word no cierra el modal; se toma la lectura literal (fuera) -->
+      <p data-reveal style="margin-top:32px;">Además de la inspección física, es obligatorio verificar que la documentación del conductor y del vehículo (detallada en el numeral 1.4) esté al día. Verifica también que tu registro de horas de conducción y descanso, según la política del PESV de tu empresa, esté al día.</p>
+      <p data-reveal>Regla de oro: si detectas una falla crítica (frenos, dirección, llantas, luces o fugas), el vehículo no debe operar. Las demás fallas se reportan de inmediato al responsable de mantenimiento.</p>
+
+      <div class="ova-callout ova-callout--success" style="margin-top:24px;" data-reveal>
+        <div class="ova-callout__ico"><iconify-icon icon="mdi:check-circle-outline"></iconify-icon></div>
+        <div><span class="ova-callout__tag">Buena práctica</span><p style="margin:8px 0 0;">Realiza el proceso preoperacional completo antes de iniciar cada turno, incluso si el vehículo funcionó sin problemas el día anterior. Recuerda que las fallas mecánicas e imprevistas pueden manifestarse de un momento a otro.</p></div>
+      </div>
