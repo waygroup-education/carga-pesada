@@ -307,3 +307,171 @@
   };
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
 })();
+
+/* =========================================================
+   TARJETAS QUE GIRAN (.ova-giro): clic, toque o Enter/Espacio (es un
+   <button>) voltea la tarjeta; aria-pressed dice en qué cara está.
+   Delegado en document: sirve también en la SPA.
+   ========================================================= */
+(function () {
+  'use strict';
+  document.addEventListener('click', e => {
+    const t = e.target.closest('.ova-giro');
+    if (!t) return;
+    const girada = t.classList.toggle('is-girada');
+    t.setAttribute('aria-pressed', String(girada));
+  });
+})();
+
+/* =========================================================
+   PUNTOS INTERACTIVOS SOBRE UNA FIGURA (.ova-hotspots--figura)
+   El motor abre el globo de un punto siempre hacia abajo, centrado en el
+   punto: cerca de un borde quedaba cortado. Al abrirlo se mide: si no cabe
+   abajo y sí arriba, se abre hacia arriba (.is-arriba), y si se sale por un
+   costado de la imagen, de la ventana o de la caja que la recorta (la figura
+   que se desliza en celular), se corre lo justo (--ova-globo-dx). Se abre al
+   pasar el puntero o al tocar el punto; un toque fuera lo cierra.
+   ========================================================= */
+(() => {
+  'use strict';
+  const PUNTO = '.ova-hotspots--figura .ova-hotspot';
+  const MARGEN = 8;   // aire mínimo hasta el borde de la imagen, de la caja o de la ventana
+
+  // El primer ancestro que recorta en horizontal: lo que quede fuera de él no se ve.
+  function recortador(el) {
+    for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+      if (getComputedStyle(a).overflowX !== 'visible') return a.getBoundingClientRect();
+    }
+    return null;
+  }
+
+  function abrir(punto) {
+    const globo = punto.querySelector('.ova-hotspot__tooltip');
+    if (!globo) return;
+    punto.classList.add('is-open');
+    punto.classList.remove('is-arriba');
+    punto.style.removeProperty('--ova-globo-dx');
+    const caja = (punto.closest('.ova-hotspots__img') || punto.parentElement).getBoundingClientRect();
+    const p = punto.getBoundingClientRect();
+    const g = globo.getBoundingClientRect();
+    const alto = g.height + 14;
+    if (p.bottom + alto > caja.bottom && p.top - alto >= caja.top) punto.classList.add('is-arriba');
+    const corte = recortador(punto);
+    const izq = Math.max(caja.left, corte ? corte.left : 0, 0) + MARGEN;
+    const der = Math.min(caja.right, corte ? corte.right : Infinity, document.documentElement.clientWidth) - MARGEN;
+    let dx = 0;
+    if (g.width <= der - izq) {
+      if (g.left < izq) dx = izq - g.left;
+      else if (g.right > der) dx = der - g.right;
+    }
+    if (dx) punto.style.setProperty('--ova-globo-dx', `${Math.round(dx)}px`);
+  }
+  function cerrar(punto) {
+    punto.classList.remove('is-open', 'is-arriba');
+    punto.style.removeProperty('--ova-globo-dx');
+  }
+
+  document.addEventListener('pointerover', e => {
+    const punto = e.target.closest && e.target.closest(PUNTO);
+    if (punto && !punto.contains(e.relatedTarget)) abrir(punto);
+  });
+  document.addEventListener('pointerout', e => {
+    const punto = e.target.closest && e.target.closest(PUNTO);
+    if (punto && e.pointerType === 'mouse' && !punto.contains(e.relatedTarget)) cerrar(punto);
+  });
+  document.addEventListener('click', e => {
+    const punto = e.target.closest && e.target.closest(PUNTO);
+    document.querySelectorAll(PUNTO + '.is-open').forEach(otro => { if (otro !== punto) cerrar(otro); });
+    if (punto) abrir(punto);
+  });
+})();
+
+/* =========================================================
+   RETÍCULA DE LA TARJETA CON CIFRA (.ova-cifra__reticula)
+   data-ova-puntos="60" arma los 100 puntos y enciende los 60 primeros;
+   cada uno lleva su orden (--i) para encenderse uno tras otro.
+   Es decoración (aria-hidden): el dato está en el texto.
+   ========================================================= */
+(function () {
+  'use strict';
+  function armar(r) {
+    if (r.children.length) return;
+    const n = Math.max(0, Math.min(100, parseInt(r.dataset.ovaPuntos, 10) || 0));
+    let html = '';
+    for (let i = 0; i < 100; i++) html += `<span class="ova-cifra__punto${i < n ? ' ova-cifra__punto--lleno' : ''}" style="--i:${i};"></span>`;
+    r.innerHTML = html;
+  }
+  const iniciar = () => {
+    const todas = () => document.querySelectorAll('.ova-cifra__reticula[data-ova-puntos]').forEach(armar);
+    todas();
+    new MutationObserver(todas).observe(document.body, { childList: true, subtree: true });
+  };
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
+})();
+
+/* =========================================================
+   CIFRA QUE SUBE (data-ova-contar): el número sube de 0 a su valor la
+   primera vez que entra en pantalla. Acepta enteros y decimales en
+   formato español («47», «10.519», «51,7»); al terminar, el texto vuelve
+   a ser el original. Con «reducir movimiento» no se anima.
+   ========================================================= */
+(function () {
+  'use strict';
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+  const NUM = /^(\d{1,3}(?:\.\d{3})*|\d+)(,\d+)?$/;
+  const vistos = new WeakSet();
+  function contar(el) {
+    const original = el.textContent;
+    const m = original.trim().match(NUM);
+    if (!m) return;
+    const decimales = m[2] ? m[2].length - 1 : 0;
+    const fin = parseFloat(m[1].replace(/\./g, '') + (m[2] ? '.' + m[2].slice(1) : ''));
+    const miles = m[1].includes('.');
+    const fmt = v => {
+      let [e, d] = v.toFixed(decimales).split('.');
+      if (miles) e = e.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return e + (d ? ',' + d : '');
+    };
+    const dur = 1400, t0 = performance.now();
+    const paso = t => {
+      const p = Math.min(1, (t - t0) / dur);
+      el.textContent = p < 1 ? fmt(fin * (1 - Math.pow(1 - p, 3))) : original;
+      if (p < 1) requestAnimationFrame(paso);
+    };
+    el.textContent = fmt(0);
+    requestAnimationFrame(paso);
+  }
+  // La cuenta espera a que la sección termine de aparecer (el motor la funde con data-reveal);
+  // si arrancara al entrar en pantalla, al recargar ya iría casi al final cuando la cifra se ve.
+  function cuandoSeVea(el, fn) {
+    const r = el.closest('[data-reveal]');
+    if (!r) return fn();
+    const tras = () => parseFloat(getComputedStyle(r).opacity) >= .99 ? fn() : setTimeout(fn, 850);
+    if (r.classList.contains('is-visible')) return tras();
+    const mo = new MutationObserver(() => {
+      if (!r.classList.contains('is-visible')) return;
+      mo.disconnect();
+      tras();
+    });
+    mo.observe(r, { attributes: true, attributeFilter: ['class'] });
+  }
+  const io = new IntersectionObserver(entradas => entradas.forEach(e => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    const el = e.target, original = el.textContent;
+    if (!original.trim().match(NUM)) return;
+    el.textContent = '0';
+    cuandoSeVea(el, () => { el.textContent = original; contar(el); });
+  }), { threshold: 0.6 });
+  const vigilar = () => document.querySelectorAll('[data-ova-contar]').forEach(el => {
+    if (vistos.has(el)) return;
+    vistos.add(el);
+    io.observe(el);
+  });
+  const iniciar = () => {
+    vigilar();
+    new MutationObserver(vigilar).observe(document.body, { childList: true, subtree: true });
+  };
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
+})();

@@ -1038,8 +1038,12 @@ code {
   width: 100%;
   text-align: left;
 }
+/* Número y título en flex: la segunda línea del título empieza donde la primera, no bajo el
+   chip, y el título queda a plomo con el cuerpo (72 px). KIT-003, D10. */
+.ova-acordeon__head > span { display: flex; align-items: center; gap: 16px; }
 .ova-acordeon__head .num {
   display: inline-flex;
+  flex: none;
   width: 32px; height: 32px;
   background: var(--acento-soft);
   color: var(--c-acento);
@@ -1047,14 +1051,20 @@ code {
   align-items: center; justify-content: center;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  margin-right: 16px;
 }
 .ova-acordeon__item.is-open .ova-acordeon__head .num { background: var(--grad-brand); color: white; }
 .ova-acordeon__chev { transition: transform .3s; color: var(--text-mut); }
 .ova-acordeon__item.is-open .ova-acordeon__chev { transform: rotate(180deg); color: var(--c-acento); }
-.ova-acordeon__body { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
-.ova-acordeon__body-inner { padding: 0 24px 22px 72px; color: var(--text-pri); }
-.ova-acordeon__item.is-open .ova-acordeon__body { max-height: 600px; }
+/* El cuerpo abre de 0fr a 1fr: mide lo que mide su contenido, sin tope de altura
+   (un max-height fijo cortaba los cuerpos largos a 390 px). Cerrado, el interior va sin
+   padding inferior: una caja no mide menos que su padding y la fila quedaba en 22 px. KIT-003, D4. */
+.ova-acordeon__body { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows .4s ease; }
+.ova-acordeon__body-inner { min-height: 0; padding: 0 24px 22px 72px; color: var(--text-pri); transition: padding-bottom .4s ease; }
+.ova-acordeon__item:not(.is-open) .ova-acordeon__body-inner { padding-bottom: 0; }
+.ova-acordeon__item.is-open .ova-acordeon__body { grid-template-rows: 1fr; }
+@media (max-width: 600px) {
+  .ova-acordeon__body-inner { padding-left: 24px; }
+}
 
 /* TABS
    Si los botones no caben en la fila, la fila se desliza en horizontal: antes
@@ -1171,10 +1181,6 @@ code {
   gap: 32px;
   align-items: stretch;
 }
-@media (max-width: 768px) {
-  .ova-vs { grid-template-columns: 1fr; }
-  .ova-vs__divider { display: none; }
-}
 .ova-vs__card {
   background: var(--bg-surface);
   border-radius: var(--r-lg);
@@ -1218,6 +1224,11 @@ code {
   border-radius: 50%;
   align-self: center;
   box-shadow: var(--shadow-md);
+}
+/* Va detrás de la regla base del divisor: antes iba delante y su display:grid la anulaba. KIT-003, D11. */
+@media (max-width: 768px) {
+  .ova-vs { grid-template-columns: 1fr; }
+  .ova-vs__divider { display: none; }
 }
 
 /* STEPPER VERTICAL */
@@ -1277,6 +1288,14 @@ code {
   text-transform: uppercase;
   font-weight: 700;
   margin-bottom: 12px;
+}
+/* En el celular, el número de 96 px dejaba el texto en 17 caracteres por línea: número de 48,
+   la línea al centro del número y la tarjeta con el ancho que queda. KIT-003, D6. */
+@media (max-width: 600px) {
+  .ova-step { grid-template-columns: 48px minmax(0, 1fr); gap: 14px; }
+  .ova-step__num { width: 48px; height: 48px; border-radius: 14px; font-size: 1.1rem; }
+  .ova-stepper::before { left: 23px; top: 24px; bottom: 24px; }
+  .ova-step__card { padding: 20px; }
 }
 
 /* TIMELINE */
@@ -2736,10 +2755,12 @@ body.ova-portada-full .ova-main{ width:100%; max-width:none; margin:0; padding:0
   .ova-hotspots--figura .ova-hotspots__img { min-width: 720px; }
 }
 
-/* Carrusel · tarjetas: icono, título y texto en cada slide */
+/* Carrusel · tarjetas: icono, título y texto en cada slide. Cada tarjeta mide lo que mide su
+   texto (la pista no las estira) y el texto va en --text-pri: --text-mut daba 4,29:1. KIT-003, D5 y D8. */
+.ova-carrusel--tarjetas .ova-carrusel__track { align-items: flex-start; }
 .ova-carrusel--tarjetas .ova-carrusel__slide > iconify-icon { font-size: 2.4rem; color: var(--c-acento); display: block; }
 .ova-carrusel--tarjetas .ova-carrusel__slide h4 { margin: 12px 0 6px; color: var(--text-head); }
-.ova-carrusel--tarjetas .ova-carrusel__slide p { margin: 0; color: var(--text-mut); font-size: .95rem; line-height: 1.6; }
+.ova-carrusel--tarjetas .ova-carrusel__slide p { margin: 0; color: var(--text-pri); font-size: .95rem; line-height: 1.6; }
 
 /* Carrusel · slide: una tarjeta por vista (va con data-ova-visibles="1"), texto y figura o
    retrato; la navegación dentro de la tarjeta, puntos al centro y flechas abajo a la derecha. */
