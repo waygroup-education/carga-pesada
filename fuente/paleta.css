@@ -4,3 +4,22 @@
   --c-info:   #38E1FF;
   --c-deep:   #0F2B47;
 }
+
+/* Logo del cliente (CEIM · Volcan) en el menú lateral. Es blanco: va directo sobre el
+   azul del menú, sin el panel blanco del logo de Waygroup; en la versión clara (menú
+   blanco) lleva su propio fondo azul para que se lea. */
+html .ova-sidebar .ova-brand-logo--desktop {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+html[data-version="clara"] .ova-sidebar .ova-brand-logo--desktop {
+  background: var(--c-deep);
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+html[data-version="clara"] .ova-sidebar .ova-brand-logo--mobile {
+  background: var(--c-deep);
+  padding: 6px;
+  border-radius: 8px;
+}

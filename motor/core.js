@@ -44,6 +44,7 @@
   const esSPA = () => !!document.querySelector('[data-ova-vista]');
   const hrefDe = (m) => esSPA() ? '#/' + m.id : m.file;
   let reaplicarColapso = null;
+  const cifraProgreso = (plantilla, n, total) => String(plantilla).replace(/\{n\}/g, n).replace(/\{total\}/g, total);
 
   /* ============================================
      RENDER · sidebar
@@ -56,6 +57,9 @@
     const total = C.menu.length;
     const completed = Math.max(0, idx);
     const progress = ((completed + 1) / total) * 100;
+    // Texto de progreso (KIT-009): la institución lo define en `textos.progreso` de la configuración;
+    // sin esa clave, «Progreso» y «N/total». La compacta y data-progress siempre van con «N/total».
+    const textoProgreso = Object.assign({ etiqueta: 'Progreso', cifra: '{n}/{total}' }, (C.textos || {}).progreso);
 
     el.innerHTML = `
       <div class="ova-sidebar__compacta" aria-hidden="true">
@@ -101,7 +105,7 @@
             }
             // Marca: número si es contenido temático, icono si es sección estructural
             const marca = m.num
-              ? `<span class="num">${m.num}</span>`
+              ? `<span class="num">${m.rotulo || m.num}</span>`
               : (m.icon ? `<span class="num num--icono"><iconify-icon icon="${m.icon}"></iconify-icon></span>` : `<span class="num num--vacio"></span>`);
             const nivel = m.tipo === 'subtema' || m.grupo ? 2 : 1;
             html += `
@@ -125,8 +129,8 @@
       </nav>
       <div class="ova-sidebar__progress" data-progress="${completed + 1}/${total}">
         <div class="label">
-          <span>Progreso</span>
-          <strong>${completed + 1}/${total}</strong>
+          <span>${textoProgreso.etiqueta}</span>
+          <strong>${cifraProgreso(textoProgreso.cifra, completed + 1, total)}</strong>
         </div>
         <div class="bar"><div class="bar-fill" style="width:${progress}%"></div></div>
       </div>
@@ -502,6 +506,10 @@
     const n = parseInt(declarados, 10);
     return n > 0 ? Math.min(n, porAncho) : porAncho;
   }
+  // Completo: todas las tarjetas caben a la vista; no hay a dónde desplazar (KIT-012, D6).
+  function carruselCompleto(total, visibles) {
+    return total <= visibles;
+  }
   function setupCarrusel(root = document) {
     root.querySelectorAll('.ova-carrusel').forEach(carr => {
       const track = carr.querySelector('.ova-carrusel__track');
@@ -519,15 +527,24 @@
         track.style.transform = `translateX(${-idx * slideW}px)`;
         dotsHost?.querySelectorAll('.ova-carrusel__dot').forEach((d, k) => d.classList.toggle('is-active', k === idx));
       };
-      if (dotsHost) {
-        dotsHost.innerHTML = Array.from({ length: max() + 1 }, (_, i) =>
-          `<button class="ova-carrusel__dot ${i === 0 ? 'is-active' : ''}" data-i="${i}"></button>`
-        ).join('');
-        dotsHost.addEventListener('click', e => {
-          const d = e.target.closest('.ova-carrusel__dot');
-          if (d) go(parseInt(d.dataset.i));
-        });
-      }
+      // Con todo a la vista, data-ova-completo esconde la navegación y centra la pista (core.css);
+      // los puntos se rehacen con el ancho actual. Se reevalúa al cambiar el ancho de la ventana.
+      const actualizar = () => {
+        const completo = carruselCompleto(slides.length, visible());
+        carr.toggleAttribute('data-ova-completo', completo);
+        if (dotsHost) {
+          dotsHost.innerHTML = completo ? '' : Array.from({ length: max() + 1 }, (_, i) =>
+            `<button class="ova-carrusel__dot ${i === 0 ? 'is-active' : ''}" data-i="${i}"></button>`
+          ).join('');
+        }
+        go(completo ? 0 : idx);
+      };
+      actualizar();
+      window.addEventListener('resize', actualizar);
+      dotsHost?.addEventListener('click', e => {
+        const d = e.target.closest('.ova-carrusel__dot');
+        if (d) go(parseInt(d.dataset.i));
+      });
       prev?.addEventListener('click', () => go(idx - 1));
       next?.addEventListener('click', () => go(idx + 1));
     });
@@ -573,33 +590,94 @@
     el.addEventListener('dragstart', e => { if (id !== null) e.preventDefault(); });
   }
 
-  // Drag & Drop
+  // Clasificar. Arrastre, o tocar el elemento y después la categoría (también Enter o Espacio,
+  // sobre botones): WCAG 2.2 AA 2.5.7 y 2.1.1 (KIT-007, D9). El marcado viejo (elementos en
+  // <div>, categorías sin botón) se completa aquí para que el teclado lo alcance.
   function setupDnD(root = document) {
-    let dragged = null;
-    root.querySelectorAll('.ova-dnd__item').forEach(item => {
-      item.draggable = true;
-      item.addEventListener('dragstart', () => { dragged = item; item.classList.add('is-dragging'); });
-      item.addEventListener('dragend', () => { item.classList.remove('is-dragging'); dragged = null; });
-    });
-    root.querySelectorAll('.ova-dnd__zone').forEach(zone => {
-      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('is-over'); });
-      zone.addEventListener('dragleave', () => zone.classList.remove('is-over'));
-      zone.addEventListener('drop', e => {
-        e.preventDefault();
-        zone.classList.remove('is-over');
-        if (!dragged) return;
-        const correct = dragged.dataset.ovaCorrect === zone.dataset.ovaTarget;
-        dragged.classList.add(correct ? 'is-correct' : 'is-wrong');
-        zone.querySelector('.ova-dnd__items')?.appendChild(dragged);
+    root.querySelectorAll('.ova-dnd').forEach(dnd => {
+      let dragged = null, elegido = null;
+      const elegir = item => {
+        if (elegido) elegido.classList.remove('is-selected'), elegido.setAttribute('aria-pressed', 'false');
+        elegido = item === elegido ? null : item;
+        if (elegido) elegido.classList.add('is-selected'), elegido.setAttribute('aria-pressed', 'true');
+      };
+      const poner = (item, zone) => {
+        item.classList.remove('is-correct', 'is-wrong', 'is-selected');
+        item.setAttribute('aria-pressed', 'false');
+        item.classList.add(item.dataset.ovaCorrect === zone.dataset.ovaTarget ? 'is-correct' : 'is-wrong');
+        zone.querySelector('.ova-dnd__items')?.appendChild(item);
+      };
+      dnd.querySelectorAll('.ova-dnd__item').forEach(item => {
+        if (item.tagName !== 'BUTTON') {
+          item.setAttribute('role', 'button');
+          item.tabIndex = 0;
+          item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); } });
+        }
+        item.setAttribute('aria-pressed', 'false');
+        item.draggable = true;
+        item.addEventListener('click', () => elegir(item));
+        item.addEventListener('dragstart', () => { dragged = item; item.classList.add('is-dragging'); });
+        item.addEventListener('dragend', () => { item.classList.remove('is-dragging'); dragged = null; });
+      });
+      dnd.querySelectorAll('.ova-dnd__zone').forEach(zone => {
+        const h = zone.querySelector('h4');
+        if (h && !h.querySelector('button')) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ova-dnd__target';
+          while (h.firstChild) b.appendChild(h.firstChild);
+          h.appendChild(b);
+        }
+        zone.addEventListener('click', e => {
+          if (!elegido || e.target.closest('.ova-dnd__item')) return;
+          const item = elegido; elegido = null;
+          poner(item, zone);
+        });
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('is-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('is-over'));
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          zone.classList.remove('is-over');
+          if (!dragged) return;
+          if (dragged === elegido) elegido = null;
+          poner(dragged, zone);
+        });
       });
     });
   }
 
-  // Ordenar
+  // Ordenar. Arrastre, o los botones ↑/↓ de cada elemento (toque y teclado); la nueva posición
+  // se anuncia a quien usa lector de pantalla (KIT-007, D8).
   function setupOrden(root = document) {
     root.querySelectorAll('.ova-orden').forEach(list => {
       let dragged = null;
+      const aviso = document.createElement('p');
+      aviso.className = 'ova-sr';
+      aviso.setAttribute('aria-live', 'polite');
+      list.after(aviso);
+      const mover = (item, paso, boton) => {
+        const hermano = paso < 0 ? item.previousElementSibling : item.nextElementSibling;
+        if (!hermano) return;
+        list.insertBefore(item, paso < 0 ? hermano : hermano.nextSibling);
+        item.classList.remove('is-correct', 'is-wrong');
+        renumber(list);
+        const items = [...list.querySelectorAll('.ova-orden__item')];
+        aviso.textContent = `Posición ${items.indexOf(item) + 1} de ${items.length}`;
+        (boton.disabled ? item.querySelector('.ova-orden__mover button:not(:disabled)') : boton)?.focus();
+      };
       list.querySelectorAll('.ova-orden__item').forEach(item => {
+        const caja = document.createElement('span');
+        caja.className = 'ova-orden__mover';
+        [['Subir', 'mdi:arrow-up', -1], ['Bajar', 'mdi:arrow-down', 1]].forEach(([nombre, icono, paso]) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ova-orden__btn';
+          b.setAttribute('aria-label', nombre);
+          b.innerHTML = `<iconify-icon icon="${icono}" aria-hidden="true"></iconify-icon>`;
+          b.addEventListener('click', () => mover(item, paso, b));
+          caja.appendChild(b);
+        });
+        item.appendChild(caja);
         item.draggable = true;
         item.addEventListener('dragstart', () => { dragged = item; item.classList.add('is-dragging'); });
         item.addEventListener('dragend',   () => { item.classList.remove('is-dragging'); dragged = null; renumber(list); });
@@ -609,10 +687,14 @@
           item.parentNode.insertBefore(dragged, after ? item.nextSibling : item);
         });
       });
+      renumber(list);
     });
     document.querySelectorAll('[data-ova-orden-check]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const list = btn.previousElementSibling?.matches('.ova-orden') ? btn.previousElementSibling : btn.parentElement.querySelector('.ova-orden');
+        // El aviso de la posición (.ova-sr) queda entre la lista y su botón
+        let prev = btn.previousElementSibling;
+        if (prev?.matches('.ova-sr')) prev = prev.previousElementSibling;
+        const list = prev?.matches('.ova-orden') ? prev : btn.parentElement.querySelector('.ova-orden');
         if (!list) return;
         list.querySelectorAll('.ova-orden__item').forEach((item, i) => {
           item.classList.remove('is-correct', 'is-wrong');
@@ -622,9 +704,13 @@
     });
   }
   function renumber(list) {
-    list.querySelectorAll('.ova-orden__item').forEach((item, i) => {
+    const items = list.querySelectorAll('.ova-orden__item');
+    items.forEach((item, i) => {
       const num = item.querySelector('.ova-orden__num');
       if (num) num.textContent = i + 1;
+      const [sube, baja] = item.querySelectorAll('.ova-orden__btn');
+      if (sube) sube.disabled = i === 0;
+      if (baja) baja.disabled = i === items.length - 1;
     });
   }
 
@@ -653,17 +739,67 @@
     });
   }
 
-  // Modal
+  // Modal. La ventana es un diálogo con su título como nombre; al abrir, el foco pasa a ella y no
+  // sale mientras está abierta; al cerrar, vuelve al botón que la abrió (KIT-006, D2).
+  function prepararModal(modal) {
+    const dialogo = modal.querySelector('.ova-modal__dialog') || modal;
+    dialogo.setAttribute('role', 'dialog');
+    dialogo.setAttribute('aria-modal', 'true');
+    dialogo.setAttribute('tabindex', '-1');
+    const titulo = dialogo.querySelector('h2, h3, h4');
+    if (titulo) {
+      if (!titulo.id) titulo.id = (modal.id || 'ova-modal') + '-titulo';
+      dialogo.setAttribute('aria-labelledby', titulo.id);
+    }
+    return dialogo;
+  }
+
+  function enfocables(modal) {
+    const sel = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]';
+    return Array.from(modal.querySelectorAll(sel)).filter(e => e.getAttribute('tabindex') !== '-1');
+  }
+
+  function abrirModal(modal, origen) {
+    const dialogo = prepararModal(modal);
+    modal._ovaOrigen = origen || document.activeElement;
+    modal.classList.add('is-open');
+    dialogo.focus();
+  }
+
+  function cerrarModal(modal) {
+    modal.classList.remove('is-open');
+    const origen = modal._ovaOrigen;
+    modal._ovaOrigen = null;
+    if (origen && origen.focus) origen.focus();
+  }
+
+  function atraparFoco(modal, e) {
+    const lista = enfocables(modal);
+    if (!lista.length) { e.preventDefault(); return; }
+    const primero = lista[0], ultimo = lista[lista.length - 1];
+    const activo = document.activeElement;
+    const fuera = !lista.includes(activo);
+    if (e.shiftKey && (activo === primero || fuera)) { e.preventDefault(); ultimo.focus(); }
+    else if (!e.shiftKey && (activo === ultimo || fuera)) { e.preventDefault(); primero.focus(); }
+  }
+
   function setupModal() {
     document.addEventListener('click', e => {
       const open = e.target.closest('[data-ova-modal-open]');
-      if (open) { document.getElementById(open.dataset.ovaModalOpen)?.classList.add('is-open'); return; }
+      if (open) {
+        const modal = document.getElementById(open.dataset.ovaModalOpen);
+        if (modal) abrirModal(modal, open);
+        return;
+      }
       const close = e.target.closest('[data-ova-modal-close]');
-      if (close) { close.closest('.ova-modal')?.classList.remove('is-open'); return; }
-      if (e.target.classList.contains('ova-modal')) e.target.classList.remove('is-open');
+      if (close) { const modal = close.closest('.ova-modal'); if (modal) cerrarModal(modal); return; }
+      if (e.target.classList.contains('ova-modal')) cerrarModal(e.target);
     });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') document.querySelectorAll('.ova-modal.is-open').forEach(m => m.classList.remove('is-open'));
+      const abiertas = document.querySelectorAll('.ova-modal.is-open');
+      if (!abiertas.length) return;
+      if (e.key === 'Escape') abiertas.forEach(cerrarModal);
+      else if (e.key === 'Tab') atraparFoco(abiertas[abiertas.length - 1], e);
     });
   }
 
@@ -863,6 +999,7 @@
     const labelItems = root.dataset.labelItems || 'actividades';
 
     let current = 0;
+    let iniciado = false;
 
     function update(){
       slides.forEach((s, i) => s.classList.toggle('is-active', i === current));
@@ -890,7 +1027,9 @@
         // Slides 1..9 (índices 1..9, son las actividades 1 a 9)
         const activityNum = current;
         const total_activities = total - 2; // descartando intro y cierre
-        counter.textContent = `${labelItem} ${activityNum} de ${total_activities}`;
+        // En ≤ 480 px se ve «N / M»; el lector de pantalla oye siempre la frase completa (KIT-007, D10)
+        counter.innerHTML = `<span class="ova-evalquiz__counter-largo">${labelItem} ${activityNum} de ${total_activities}</span>` +
+          `<span class="ova-evalquiz__counter-corto" aria-hidden="true">${activityNum} / ${total_activities}</span>`;
         if (sectionLabel) sectionLabel.textContent = slide.dataset.section || '—';
         // Color global del head según sección
         root.dataset.color = slide.dataset.sectionColor || 'acento';
@@ -899,8 +1038,8 @@
       // Si es intro o cierre, ocultar nav (intro tiene su propio botón Comenzar)
       nav.style.display = (isIntro || isCierre) ? 'none' : 'flex';
 
-      // Estado de botones
-      btnPrev.disabled = current <= 1; // no puede volver a intro
+      // Estado de botones: desde la actividad 1, «Anterior» vuelve a la presentación (2026-10-26)
+      btnPrev.disabled = current <= 0;
       // En la última actividad antes de cierre, el botón siguiente dice "Finalizar"
       if (current === total - 2) { // penúltimo (última actividad)
         btnNext.innerHTML = 'Finalizar <iconify-icon icon="mdi:flag-checkered"></iconify-icon>';
@@ -908,8 +1047,19 @@
         btnNext.innerHTML = 'Siguiente <iconify-icon icon="mdi:arrow-right"></iconify-icon>';
       }
 
-      // Scroll al top (para que el usuario vea la actividad desde arriba)
-      (head || root).scrollIntoView({behavior: 'smooth', block: 'start'});
+      // Que la actividad se vea desde arriba, sin quedar bajo la barra superior fija y sin saltos:
+      // solo se desplaza si el inicio del quiz quedó fuera de la vista (al avanzar desde abajo).
+      // Al cargar y al pulsar «Comenzar» el quiz ya está a la vista y la página no se mueve (2026-10-26).
+      if (iniciado) {
+        const barra = document.querySelector('.ova-topbar');
+        const margen = (barra ? barra.getBoundingClientRect().height : 0) + 24;
+        const arriba = (head || root).getBoundingClientRect().top;
+        if (arriba < margen) {
+          const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollBy({ top: arriba - margen, behavior: reducir ? 'auto' : 'smooth' });
+        }
+      }
+      iniciado = true;
     }
 
     function goTo(idx){

@@ -687,6 +687,14 @@ code {
   margin: 0 auto;
 }
 .ova-screen__head { margin-bottom: 40px; }
+/* Ritmo entre bloques (2026-10-25): ningún bloque pegado a otro. Todo hijo de la pantalla que no
+   es texto (párrafo, título, lista) lleva 40 px arriba y abajo. Especificidad cero: una pieza con
+   su propio margen (o un style en línea) lo conserva. Lo del llamado y la fuente del catálogo
+   está en catalogo.css. */
+:where(.ova-screen) > :where(:not(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, hr, header,
+  .ova-modal, script, style)) {
+  margin-block: 40px;
+}
 .ova-screen__eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-display);
@@ -1407,6 +1415,10 @@ code {
   display: flex; align-items: center; justify-content: space-between;
   margin-top: 20px;
 }
+/* Todas las tarjetas a la vista (core.js pone data-ova-completo, KIT-012): sin navegación y la
+   pista centrada; cada tarjeta conserva el ancho que tendría con navegación. */
+.ova-carrusel[data-ova-completo] .ova-carrusel__nav { display: none; }
+.ova-carrusel[data-ova-completo] .ova-carrusel__track { justify-content: center; }
 .ova-carrusel__dots { display: flex; gap: 6px; }
 .ova-carrusel__dot {
   width: 8px; height: 8px;
@@ -1756,13 +1768,19 @@ code {
 .ova-checklist__item.is-done .ova-checklist__box { background: var(--success); border-color: var(--success); color: white; }
 .ova-checklist__item.is-done .ova-checklist__text { text-decoration: line-through; color: var(--text-mut); }
 
-/* DRAG & DROP */
-.ova-dnd { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-@media (max-width: 600px) { .ova-dnd { grid-template-columns: 1fr; } }
-.ova-dnd__pool, .ova-dnd__zone { background: var(--bg-surface); border: 2px dashed var(--border-c); border-radius: var(--r-md); padding: 20px; min-height: 200px; }
-.ova-dnd__zone { background: var(--bg-muted); }
+/* DRAG & DROP (Clasificar): el banco arriba, a todo el ancho, y las categorías en cuadrícula debajo */
+.ova-dnd { display: grid; gap: 18px; }
+.ova-dnd__bank {
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px;
+  background: var(--bg-surface); border: 2px dashed var(--border-c); border-radius: var(--r-md);
+  padding: 16px 20px; min-height: 64px;
+}
+.ova-dnd__bank-title { flex-basis: 100%; font-family: var(--font-display); font-weight: 600; color: var(--text-head); font-size: .9rem; }
+.ova-dnd__zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.ova-dnd__zone { background: var(--bg-muted); border: 2px dashed var(--border-c); border-radius: var(--r-md); padding: 16px; min-height: 140px; }
+@media (max-width: 600px) { .ova-dnd__zone { min-height: 96px; } }
 .ova-dnd__zone.is-over { border-color: var(--c-acento); background: var(--acento-soft); }
-.ova-dnd__title { font-family: var(--font-display); font-weight: 600; color: var(--text-head); margin-bottom: 12px; font-size: .9rem; }
+.ova-dnd__zone h4 { margin: 0 0 12px; font-family: var(--font-display); font-size: .95rem; color: var(--text-head); }
 .ova-dnd__items { display: flex; flex-direction: column; gap: 8px; }
 .ova-dnd__item {
   padding: 10px 14px;
@@ -1770,9 +1788,15 @@ code {
   border: 1px solid var(--border-c);
   border-radius: var(--r-md);
   cursor: grab;
+  font: inherit;
   font-size: .9rem;
+  text-align: left;
   color: var(--text-pri);
 }
+.ova-dnd__item.is-selected { border-color: var(--c-acento); background: var(--acento-soft); box-shadow: 0 0 0 2px var(--c-acento); }
+/* El título de la categoría es un botón (tocar y tocar); se ve como el título */
+.ova-dnd__target { display: inline-flex; align-items: center; gap: 6px; padding: 0; background: none; border: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.ova-dnd__zone { cursor: pointer; }
 .ova-dnd__item.is-dragging { opacity: 0.5; }
 .ova-dnd__item.is-correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 8%, transparent); }
 .ova-dnd__item.is-wrong { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 6%, transparent); }
@@ -1794,7 +1818,7 @@ code {
 .ova-orden { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .ova-orden__item {
   display: grid;
-  grid-template-columns: 36px 1fr 24px;
+  grid-template-columns: 36px 1fr auto;
   gap: 14px;
   align-items: center;
   padding: 14px 18px;
@@ -1815,19 +1839,38 @@ code {
   font-size: .8rem;
 }
 .ova-orden__grip { color: var(--text-mut); cursor: grab; font-size: 1.1rem; }
+/* Subir y bajar sin arrastrar: toque y teclado (KIT-007, D8) */
+.ova-orden__mover { display: flex; gap: 6px; }
+.ova-orden__btn {
+  width: 36px; height: 36px; display: grid; place-items: center;
+  background: var(--bg-surface); border: 1px solid var(--border-c); border-radius: 8px;
+  color: var(--text-head); font-size: 1.1rem; cursor: pointer;
+}
+.ova-orden__btn:hover:not(:disabled) { border-color: var(--c-acento); }
+.ova-orden__btn:disabled { opacity: .35; pointer-events: none; }  /* sin toque: el ajuste de toque no lo elige en vez del vecino */
+@media (max-width: 600px) { .ova-orden__item { grid-template-columns: 30px 1fr auto; gap: 10px; padding: 12px; } .ova-orden__mover { flex-direction: column; } }
+.ova-orden__btn:focus-visible, .ova-dnd__item:focus-visible, .ova-dnd__target:focus-visible { outline: 3px solid var(--c-acento); outline-offset: 2px; }
+/* Texto solo para el lector de pantalla */
+.ova-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* «Verificar orden» separado de su lista, sin style en línea (KIT-007, D15). ~: el aviso de posición va entre los dos */
+.ova-orden ~ [data-ova-orden-check] { margin-top: 14px; }
 .ova-orden__item.is-correct { border-color: var(--success); background: color-mix(in srgb, var(--success) 8%, transparent); }
 .ova-orden__item.is-wrong { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 6%, transparent); }
 
 /* EMPAREJAR */
-.ova-empar { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-.ova-empar__col { display: grid; gap: 10px; }
+/* Columnas desiguales: términos cortos a la izquierda, definiciones a la derecha, también en el celular */
+.ova-empar { display: grid; grid-template-columns: 2fr 3fr; gap: 32px; }
+@media (max-width: 600px) { .ova-empar { gap: 12px; } }
+.ova-empar__col { display: grid; gap: 10px; grid-auto-rows: 1fr; }   /* mismo número de ítems y misma altura: las filas de las dos columnas coinciden */
 .ova-empar__item {
   padding: 14px 18px;
   background: var(--bg-surface);
   border: 2px solid var(--border-c);
   border-radius: var(--r-md);
   cursor: pointer;
+  font: inherit;
   font-size: .92rem;
+  text-align: left;
   color: var(--text-pri);
   transition: all .2s;
 }
@@ -2439,7 +2482,7 @@ body.ova-portada-full .ova-main{ width:100%; max-width:none; margin:0; padding:0
    inferior (anterior · progreso · contador · siguiente) en el flujo.
    Sin cabecera superior: partía la pregunta en dos.
    ========================================================= */
-.ova-eval__cuerpo{ text-align:left; max-width:74ch; }
+.ova-eval__cuerpo{ text-align:left; }   /* sin tope: la columna de lectura (2026-10-26) */
 .ova-eval__cuerpo h2{ margin:0 0 14px; }
 .ova-eval__lead{ font-size:1.12rem; line-height:1.6; color:var(--text-pri); margin:0 0 22px; }
 .ova-eval__datos{ display:flex; gap:14px; flex-wrap:wrap; margin:0 0 26px; }
@@ -2484,6 +2527,14 @@ body.ova-portada-full .ova-main{ width:100%; max-width:none; margin:0; padding:0
   .ova-evalquiz__nav .ova-evalquiz__progress-bar{ min-width:48px; }
   .ova-evalquiz__nav .ova-evalquiz__btn{ flex:0 0 auto; }
 }
+/* Contador corto en el celular: «3 / 6» a la vista, la frase completa para el lector (KIT-007, D10) */
+.ova-evalquiz__counter-corto{ display:none; }
+@media (max-width:480px){
+  .ova-evalquiz__nav{ gap:10px; padding-left:10px; }
+  .ova-evalquiz__nav .ova-evalquiz__progress-bar{ min-width:32px; }
+  .ova-evalquiz__counter-largo{ position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .ova-evalquiz__counter-corto{ display:inline; }
+}
 
 /* =========================================================
    VIDEO LOCAL · reemplazo del iframe de YouTube cuando el curso
@@ -2508,6 +2559,28 @@ body.ova-portada-full .ova-main{ width:100%; max-width:none; margin:0; padding:0
   position:absolute; left:0; right:0; bottom:0; padding:10px 14px;
   font-size:.78rem; line-height:1.35; background:linear-gradient(transparent, rgba(0,0,0,.75));
 }
+
+/* =========================================================
+   HUECO DE LA MAQUETA VACÍA · [data-ova-hueco="qué va aquí"]
+   Texto o pieza del curso que falta llenar desde el DI. Recuadro
+   punteado con el rótulo del atributo; toma el color del texto que
+   lo rodea, así se lee sobre fondo claro u oscuro. verificar-di.py
+   no lo cuenta como contenido y la entrega final lo bloquea.
+   ========================================================= */
+[data-ova-hueco]{
+  border:2px dashed color-mix(in srgb, currentColor 45%, transparent);
+  border-radius:var(--r-sm);
+  background:color-mix(in srgb, currentColor 6%, transparent);
+  padding:.5em .75em; min-height:2.6em;
+}
+[data-ova-hueco]::before{
+  content:"Hueco · " attr(data-ova-hueco);
+  display:block; margin-bottom:.25em;
+  font-family:var(--font-body); font-size:.78rem; font-weight:600; line-height:1.4;
+  letter-spacing:.02em; text-transform:none; opacity:.75;
+}
+:is(span, a, strong, em, b, i)[data-ova-hueco]{ display:inline-block; min-height:0; padding:.1em .5em; }
+:is(span, a, strong, em, b, i)[data-ova-hueco]::before{ display:inline; margin:0 .4em 0 0; }
 
 /* @catalogo-variantes ======================================
    VARIANTES DE PIEZAS DEL MOTOR que usa el catálogo (KIT-001,
@@ -2755,9 +2828,11 @@ body.ova-portada-full .ova-main{ width:100%; max-width:none; margin:0; padding:0
   .ova-hotspots--figura .ova-hotspots__img { min-width: 720px; }
 }
 
-/* Carrusel · tarjetas: icono, título y texto en cada slide. Cada tarjeta mide lo que mide su
-   texto (la pista no las estira) y el texto va en --text-pri: --text-mut daba 4,29:1. KIT-003, D5 y D8. */
-.ova-carrusel--tarjetas .ova-carrusel__track { align-items: flex-start; }
+/* Carrusel · tarjetas: icono, título y texto en cada slide. Todas las tarjetas miden lo que la
+   más alta del carrusel, también las que no están a la vista, para que la fila no quede
+   escalonada (decisión del 2026-10-25; antes cada una medía su texto, KIT-003 D5). El texto va
+   en --text-pri: --text-mut daba 4,29:1 (KIT-003, D8). */
+.ova-carrusel--tarjetas .ova-carrusel__track { align-items: stretch; }
 .ova-carrusel--tarjetas .ova-carrusel__slide > iconify-icon { font-size: 2.4rem; color: var(--c-acento); display: block; }
 .ova-carrusel--tarjetas .ova-carrusel__slide h4 { margin: 12px 0 6px; color: var(--text-head); }
 .ova-carrusel--tarjetas .ova-carrusel__slide p { margin: 0; color: var(--text-pri); font-size: .95rem; line-height: 1.6; }

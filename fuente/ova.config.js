@@ -9,8 +9,8 @@
 module.exports = {
   brand: {
     name: '', sub: '',
-    logo:       'assets/img/logos/waygroup-for-education-h.svg',
-    logoMobile: 'assets/img/logos/waygroup-w-only.svg',
+    logo:       'assets/img/logos/ceim-volcan-blanco.png',
+    logoMobile: 'assets/img/logos/ceim-volcan-marca-blanco.png',
   },
   course: {
     code: '', name: 'Seguridad vial en vehículos de carga pesada', subtitle: '', duration: '4 horas',

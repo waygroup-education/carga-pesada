@@ -2,10 +2,10 @@
 
 /* =========================================================
    INTERFAZ DE LA PLANTILLA · el botón «Cómo va en el Word» y la hoja de
-   Word dentro de su ventana. La pone scripts/generar-plantilla.js; no es piel.
+   Word dentro de su ventana; el botón «Ver código» y su bloque de código. La pone scripts/generar-plantilla.js; no es piel.
    El rojo es el de los rótulos del Word, no un color de marca.
    ========================================================= */
-.ova-catalogo__acciones { display: flex; justify-content: flex-end; margin: 18px 0 0; }
+.ova-catalogo__acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin: 18px 0 0; }
 .ova-catalogo__cab {
   display: flex; align-items: center; gap: 10px; margin: 0 0 10px;
   font-family: var(--font-display); font-weight: 700; font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-mut);
@@ -19,6 +19,15 @@
 .ova-catalogo__word .ova-catalogo__gris { color: var(--text-mut); }
 .ova-catalogo__word .ova-catalogo__rojo { color: #D62828; font-weight: 700; }
 .ova-catalogo__word .ova-catalogo__celda { display: block; margin: 8px 0; padding: 8px 10px; border: 1px solid var(--border-c); border-radius: 3px; }
+/* La ventana «Ver código» (ver_codigo en la institución): el HTML de la pieza para el programador. */
+.ova-catalogo__ventana-codigo .ova-modal__dialog { max-width: 860px; }
+.ova-catalogo__codigo {
+  margin: 0; padding: 16px 18px; max-height: 60vh; overflow: auto; border-radius: var(--r-md);
+  background: #1E1E1E; color: #E6E6E6; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: .8rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2;
+}
+.ova-catalogo__codigo code { font: inherit; color: inherit; background: none; padding: 0; }
+.ova-catalogo__ventana-codigo .ova-modal__foot [data-ova-copiar] { margin-right: auto; }
 
 /* =========================================================
    FIGURA PENDIENTE (.ova-pendiente) · el hueco de una figura que diseño
@@ -59,11 +68,58 @@
    a ancho completo. En una ventana, la ventana se ensancha para que sus
    rótulos se lean.
    ========================================================= */
-.ova-ilustracion { margin: 40px 0; border-radius: var(--r-md); overflow: hidden; }
+.ova-ilustracion { position: relative; margin: 40px 0; border-radius: var(--r-md); overflow: hidden; }
 .ova-ilustracion img { display: block; width: 100%; height: auto; }
 .ova-ilustracion figcaption { font-size: .86rem; color: var(--text-mut); padding: 14px 4px 0; }
 .ova-modal__dialog:has(.ova-ilustracion) { max-width: min(900px, 94vw); }
 .ova-modal__body .ova-ilustracion { margin: 0 0 20px; }
+.ova-acordeon__body-inner > .ova-ilustracion:first-child { margin-top: 0; }   /* el cuerpo ya trae su aire */
+/* Ampliable en el celular (2026-10-25): a 390 px los rótulos del SVG quedaban de 3 a 5 px. Una lupa
+   en la esquina abre la ventana del motor (.ova-modal) con la ilustración a 1000 px, centrada, que
+   se recorre con el dedo (catalogo.js). */
+.ova-ampliar { display: none; }
+@media (max-width: 720px) {
+  .ova-ilustracion img { cursor: zoom-in; }
+  .ova-ilustracion .ova-ampliar {
+    display: grid; place-items: center;
+    position: absolute; top: 8px; right: 8px; z-index: 1;
+    width: 36px; height: 36px; padding: 0;
+    border: 1px solid var(--border-c); border-radius: 50%;
+    background: #fff; color: var(--c-acento); font-size: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    cursor: pointer;
+  }
+  .ova-ilustracion .ova-ampliar:focus-visible { outline: 2px solid var(--c-acento); outline-offset: 2px; }
+}
+.ova-ampliada .ova-modal__dialog { position: relative; width: 96vw; max-width: 96vw; }
+.ova-ampliada .ova-modal__head {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  padding: 0; border: 0; background: none;
+}
+.ova-ampliada .ova-modal__body { padding: 0; }
+.ova-ampliada__lienzo { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ova-ampliada__lienzo img { display: block; width: 1000px; max-width: none; height: auto; }
+
+/* Indicio de desplazamiento (KIT-012): catalogo.js pone un .ova-indicio sobre cada contenedor que
+   desplaza en horizontal (la ampliada, el bloque de código y la tabla APA) y le da la caja del
+   contenedor, dentro de su anfitrión posicionado. Visible solo cuando desborda (data-ova-desborda),
+   desde que la pieza se ve. Degradado en el borde por donde sigue el contenido (se apaga en el
+   extremo alcanzado: data-ova-inicio / data-ova-fin) y barra fina proporcional al pie.
+   Variables que puede poner la piel, con defecto del motor:
+     --ova-indicio-barra   la barra                         (def. --c-acento)
+     --ova-indicio-fondo   el degradado del borde            (def. el fondo de la pieza)
+   --ova-indicio-fondo-pieza es interna del motor (el fondo que cada pieza le da a su indicio); no la declara ninguna piel. */
+.ova-codigo, .ova-apa-tabla, .ova-ampliada .ova-modal__body { position: relative; }
+.ova-indicio { position: absolute; z-index: 1; pointer-events: none; opacity: 0; --ova-indicio-fondo-pieza: var(--bg-surface); }
+.ova-indicio[data-ova-desborda] { opacity: 1; }
+.ova-indicio::before, .ova-indicio::after { content: ''; position: absolute; top: 0; bottom: 0; width: 36px; transition: opacity .25s; }
+.ova-indicio::before { left: 0; background: linear-gradient(90deg, var(--ova-indicio-fondo, var(--ova-indicio-fondo-pieza)), transparent); }
+.ova-indicio::after { right: 0; background: linear-gradient(270deg, var(--ova-indicio-fondo, var(--ova-indicio-fondo-pieza)), transparent); }
+.ova-indicio[data-ova-inicio]::before { opacity: 0; }
+.ova-indicio[data-ova-fin]::after { opacity: 0; }
+.ova-indicio__pista { position: absolute; left: 14px; right: 14px; bottom: 0; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--ova-indicio-barra, var(--c-acento)) 22%, transparent); }
+.ova-indicio__barra { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: var(--ova-indicio-barra, var(--c-acento)); transition: left .1s linear, width .1s linear; }
+.ova-codigo .ova-indicio { --ova-indicio-fondo-pieza: var(--ova-codigo-fondo, var(--bg-muted)); }
 
 @media (max-width: 720px) {
   .ova-foto-ancha img { max-height: 220px; }
@@ -124,7 +180,7 @@
    (--ova-episodio-portada) y el aro del botón de reproducir (--ova-episodio-aro).
    ========================================================= */
 .ova-episodio {
-  margin: 48px 0 24px; padding: clamp(20px, 3vw, 28px);
+  margin: 40px 0; padding: clamp(20px, 3vw, 28px);   /* 40 px como cualquier bloque (2026-10-25; antes 48/24) */
   border: 1px solid var(--border-c); border-radius: var(--r-lg); background: var(--bg-surface); box-shadow: var(--shadow-sm);
 }
 .ova-episodio__cabecera { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 20px; align-items: center; }
@@ -160,6 +216,7 @@
 .ova-episodio .ova-episodio__volumen { max-width: 90px; min-width: 70px; margin-right: 6px; }
 .ova-episodio .ova-episodio__progreso { flex: 1; margin: 0 10px; }
 .ova-episodio .ova-episodio__tiempo { color: var(--text-mut); font-variant-numeric: tabular-nums; }
+.ova-episodio .ova-episodio__tiempo--duracion { padding-left: 6px; }   /* no pegada a la barra */
 .ova-episodio__velocidad { border: 1px solid var(--border-c); background: var(--bg-surface); color: var(--text-head); border-radius: 999px; padding: 6px 12px; font: 600 13px/1 var(--font-body); cursor: pointer; min-width: 52px; }
 .ova-episodio__velocidad:hover { border-color: var(--c-acento); color: var(--c-acento); }
 
@@ -169,12 +226,23 @@
 .ova-episodio__transcripcion summary::before { content: ''; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
 .ova-episodio__transcripcion[open] summary::before { transform: rotate(-135deg) translateY(-2px); }
 .ova-episodio__texto { max-height: 420px; overflow-y: auto; padding: 8px 2px 4px; }
+/* Hay más texto: un degradado fijo al pie de la caja mientras se desliza; al llegar al final queda
+   sobre el espacio vacío que deja, sin tapar texto (2026-10-25). */
+.ova-episodio__texto::after {
+  content: ''; display: block; position: sticky; bottom: -4px; height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--bg-surface));
+  pointer-events: none;
+}
 /* Dos clases: la piel suele fijar el interlineado de .ova-screen p y se carga después. */
 .ova-episodio .ova-episodio__texto p { margin: 0 0 12px; font-size: .95rem; line-height: 1.65; }
 @media (max-width: 560px) {
   .ova-episodio__cabecera { grid-template-columns: 1fr; }
   .ova-episodio__portada { width: 100%; height: 160px; aspect-ratio: auto; }
-  .ova-episodio .ova-episodio__tiempo--duracion { display: none; }
+  /* La barra de avance en su propia fila, a todo el ancho, con los dos tiempos; los botones debajo.
+     A 390 px quedaba de unos 40 px y sin la duración (2026-10-25). */
+  .ova-episodio .ova-episodio__reproductor .ova-episodio__controles { flex-wrap: wrap; row-gap: 14px; justify-content: center; }
+  .ova-episodio .ova-episodio__tiempo, .ova-episodio .ova-episodio__progreso { order: -1; }
+  .ova-episodio .ova-episodio__progreso { flex: 1 1 calc(100% - 112px); margin: 0 8px; }
 }
 
 /* =========================================================
@@ -189,6 +257,7 @@
      --ova-oscuro-tarjeta, -accion, -texto, -suave, -rotulo, -tinta, -icono   el fondo oscuro
      --ova-oscuro-boton, -boton-tinta, -boton-hover                           su botón claro
      --ova-descargable-fondo, -filo, --ova-descargable-imagen-fondo           la descarga
+     --ova-eval-intro-fondo                                                    la presentación de la evaluación
    ========================================================= */
 
 /* Descarga simple (.ova-descargable): título y texto a la izquierda, el botón a la derecha. */
@@ -251,6 +320,14 @@
    número grande y, opcional, el icono (decorativos: el <ol> ya numera). En ≤ 720 px la marca
    pasa a una fila encima del texto. */
 .ova-numerada { list-style: none; padding: 0; margin: 0; }
+.ova-screen > .ova-numerada { margin-block: 40px; }   /* suelta en la pantalla, como cualquier bloque */
+/* Con la regla de aire del motor (core.css, 2026-10-25): el llamado va pegado a su pieza, sea cual
+   sea (22 px), y la fuente a la pieza que cita (12 px). */
+.ova-screen > .ova-llamado + * { margin-top: 22px; }
+/* Lo mismo dentro de una diapositiva de la evaluación, donde las actividades no son hijas de la
+   pantalla (KIT-007, D15). */
+.ova-evalquiz__slide .ova-llamado + * { margin-top: 22px; }
+.ova-screen > :has(+ .ova-fuente) { margin-bottom: 12px; }
 .ova-numerada--icono {
   list-style: none;
   margin: 40px 0;
@@ -460,6 +537,23 @@
   .ova-descargable__img { max-height: 200px; }
 }
 
+/* Presentación de la evaluación (.ova-eval-intro, KIT-007 D16): la primera diapositiva, diagramada
+   como «Descarga - con imagen» y con su mismo fondo; dentro de la tarjeta, el texto del banco y
+   «Comenzar»; la ayuda de las flechas, bajo la tarjeta. Sin <img> (variante sin imagen), la tarjeta
+   va sola. En celular, la imagen arriba. */
+.ova-eval-intro__tarjeta {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; align-items: center;
+  padding: 40px 48px; border-radius: 22px;
+  background: var(--ova-eval-intro-fondo, color-mix(in srgb, var(--c-info) 20%, var(--bg-surface)));
+}
+.ova-eval-intro__tarjeta:has(> .ova-eval-intro__img) { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.ova-eval-intro__img { display: block; width: 100%; max-height: 300px; object-fit: contain; }
+.ova-eval-intro__texto { margin: 0 0 22px; font-size: 1.15rem; line-height: 1.6; color: var(--text-head); }
+@media (max-width: 720px) {
+  .ova-eval-intro__tarjeta, .ova-eval-intro__tarjeta:has(> .ova-eval-intro__img) { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px 22px; }
+  .ova-eval-intro__img { max-height: 200px; }
+}
+
 /* =========================================================
    TEXTO Y ÉNFASIS II · rótulo, recursos, citas, banner y código
    (KIT-001 T7). Van en este orden: el margen de .ova-rotulo + * cede
@@ -614,6 +708,24 @@
   box-shadow: inset 3px 0 0 var(--ova-codigo-resalte, var(--c-info));
 }
 .ova-codigo__linea.is-resaltada::before { color: var(--c-acento); font-weight: 700; }
+/* «Copiar código» (catalogo.js) al final de la cabecera; «Copiado» con un visto durante 2 s. En celular,
+   solo el icono (el nombre queda en el aria-label). La piel lo viste con --ova-codigo-copiar-tinta,
+   -borde y -fondo. */
+.ova-codigo__copiar {
+  display: inline-flex; align-items: center; gap: 6px; margin-left: auto; padding: 5px 10px; min-height: 30px;
+  border: 1px solid var(--ova-codigo-copiar-borde, rgba(255, 255, 255, .35)); border-radius: var(--r-sm, 4px);
+  background: var(--ova-codigo-copiar-fondo, transparent); color: var(--ova-codigo-copiar-tinta, #fff);
+  font: inherit; font-family: var(--font-body); letter-spacing: .02em; text-transform: none; cursor: pointer;
+  transition: background-color .2s, border-color .2s;
+}
+.ova-codigo__copiar:hover { background: rgba(255, 255, 255, .1); }
+.ova-codigo__copiar:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.ova-codigo__copiar.is-copiado { border-color: currentColor; }
+.ova-codigo__copiar iconify-icon { font-size: 1rem; }
+@media (max-width: 720px) {
+  .ova-codigo__copiar { padding: 5px 7px; }
+  .ova-codigo__copiar-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
 
 /* =========================================================
    COMPONENTES INTERACTIVOS (KIT-001 T8) · acordeón con figura al lado,
@@ -683,6 +795,7 @@
      --ova-ficha         fila al pasar el mouse               (def. --bg-muted)
      --ova-meta / -tinta la meta o el último hito y su texto  (def. --c-acento / #fff)
      --ova-ruta-tenue    la ruta con iconos                   (def. --border-c)
+     --ova-indicio-barra / -fondo   barra y degradado del indicio de desplazamiento (def. --c-acento / fondo de la pieza)
    La forma de la marca de inicio y de meta del recorrido la pone la piel.
    ========================================================= */
 
@@ -702,32 +815,38 @@
 .ova-tabs--pasos .ova-tabs__media > div > p:first-child { margin-top: 0; }
 
 /* Ruta en zigzag (.ova-ruta): cada paso alterna texto e imagen; una línea sale del número, baja y
-   cruza al otro lado hasta el número siguiente. Todas las esquinas son curvas: la de llegada a cada
-   paso la dibuja su ::after, y la línea horizontal del paso anterior se detiene un radio antes. */
+   cruza al otro lado hasta el número siguiente. Todas las esquinas son curvas. Dos cajas por paso:
+   el ::before baja desde el número, curva abajo y cruza en horizontal; el ::after trae la curva de
+   llegada desde la horizontal del paso anterior y baja por la misma vertical. Donde un trazo recto
+   (que Chrome ajusta al píxel) se une a un arco (suavizado), el arco se pinta un 5 % más claro en
+   su arranque y su final y la esquina se ve quebrada; por eso cada tramo recto de una caja entra en
+   el arco de la otra (2 px la horizontal, 4 px la vertical, que es donde el arco se aclara más) y los
+   dos tramos rectos se pintan uno sobre otro, con el mismo ajuste al píxel. El color de la línea
+   debe ser opaco (KIT-012, T3). */
 .ova-ruta { --ova-ruta-x: 30px; --ova-ruta-r: 18px; --ova-ruta-c: var(--ova-realce, var(--c-info)); list-style: none; margin: 0; padding: 0; }
 .ova-ruta__paso {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 32px; align-items: center; padding: 36px 84px;
 }
-.ova-ruta__paso::before {
-  content: ''; position: absolute; top: 0; bottom: 0; left: var(--ova-ruta-x); right: calc(var(--ova-ruta-x) + var(--ova-ruta-r)); pointer-events: none;
-  border: 0 solid var(--ova-ruta-c); border-left-width: 2px; border-bottom-width: 2px; border-bottom-left-radius: var(--ova-ruta-r);
+.ova-ruta__paso::before, .ova-ruta__paso::after {
+  content: ''; position: absolute; left: var(--ova-ruta-x); right: calc(var(--ova-ruta-x) + var(--ova-ruta-r) - 2px); pointer-events: none;
+  border: 0 solid var(--ova-ruta-c); border-left-width: 2px;
 }
-.ova-ruta__paso:nth-child(even)::before {
-  left: calc(var(--ova-ruta-x) + var(--ova-ruta-r)); right: var(--ova-ruta-x);
-  border-left-width: 0; border-right-width: 2px; border-bottom-left-radius: 0; border-bottom-right-radius: var(--ova-ruta-r);
+.ova-ruta__paso:nth-child(even)::before, .ova-ruta__paso:nth-child(even)::after {
+  left: calc(var(--ova-ruta-x) + var(--ova-ruta-r) - 2px); right: var(--ova-ruta-x);
+  border-left-width: 0; border-right-width: 2px;
 }
-.ova-ruta__paso:not(:first-child)::before { top: var(--ova-ruta-r); }
-.ova-ruta__paso:not(:first-child)::after {
-  content: ''; position: absolute; top: -2px; left: var(--ova-ruta-x); width: var(--ova-ruta-r); height: calc(var(--ova-ruta-r) + 2px); pointer-events: none;
-  border: 0 solid var(--ova-ruta-c); border-top-width: 2px; border-left-width: 2px; border-top-left-radius: var(--ova-ruta-r);
-}
-.ova-ruta__paso:nth-child(even)::after {
-  left: auto; right: var(--ova-ruta-x);
-  border-left-width: 0; border-right-width: 2px; border-top-left-radius: 0; border-top-right-radius: var(--ova-ruta-r);
-}
+/* Salida: vertical, curva abajo y horizontal (desde el 2.º paso, la vertical entra 4 px en la curva de llegada). */
+.ova-ruta__paso::before { top: calc(var(--ova-ruta-r) - 4px); bottom: 0; border-bottom-width: 2px; border-bottom-left-radius: var(--ova-ruta-r); }
+.ova-ruta__paso:nth-child(even)::before { border-bottom-left-radius: 0; border-bottom-right-radius: var(--ova-ruta-r); }
 .ova-ruta__paso:first-child::before { top: 50%; }
 .ova-ruta__paso:last-child::before { bottom: 50%; border-bottom-width: 0; border-radius: 0; }
+/* Llegada: la horizontal del paso anterior (sobre su mismo trazo, hasta 2 px dentro de su curva de salida),
+   la curva de llegada y la vertical, que entra 4 px en la curva de salida de este paso. */
+.ova-ruta__paso::after { top: -2px; bottom: calc(var(--ova-ruta-r) - 4px); border-top-width: 2px; border-top-left-radius: var(--ova-ruta-r); }
+.ova-ruta__paso:nth-child(even)::after { border-top-left-radius: 0; border-top-right-radius: var(--ova-ruta-r); }
+.ova-ruta__paso:first-child::after { top: 50%; border-top-width: 0; border-radius: 0; }
+.ova-ruta__paso:last-child::after { bottom: 50%; }
 .ova-ruta__paso:nth-child(even) > .ova-ruta__texto { order: 2; }
 .ova-ruta__num {
   position: absolute; top: 50%; left: var(--ova-ruta-x); transform: translate(-50%, -50%); z-index: 1;
@@ -751,22 +870,29 @@
 .ova-ruta__num iconify-icon { font-size: 24px; }
 .ova-ruta--iconos .ova-ruta__num iconify-icon { font-size: 28px; }
 @media (max-width: 720px) {
-  .ova-ruta__paso { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 24px 0 24px 64px; }
-  .ova-ruta--texto .ova-ruta__paso:nth-child(even) > .ova-ruta__texto { text-align: left; }
-  .ova-ruta__paso::before, .ova-ruta__paso:nth-child(even)::before {
+  /* Ruta con figura: apilada en una columna, con la línea recta a la izquierda (D8 de KIT-012). */
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 24px 0 24px 64px; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso::before, .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:nth-child(even)::before {
     left: 22px; right: auto; width: 0; border-width: 0 0 0 2px; border-radius: 0;
   }
-  .ova-ruta__paso:not(:first-child)::before { top: 0; }
-  .ova-ruta__paso::after { display: none; }
-  .ova-ruta__paso:nth-child(even) > .ova-ruta__texto { order: 0; }
-  .ova-ruta__num, .ova-ruta__paso:nth-child(even) > .ova-ruta__num { left: 22px; right: auto; top: 40px; transform: translate(-50%, -50%); }
-  .ova-ruta__paso:first-child::before { top: 40px; }
-  .ova-ruta__paso:last-child::before { bottom: auto; height: 40px; }
-  .ova-ruta--iconos .ova-ruta__paso { padding-left: 80px; }
-  .ova-ruta--iconos .ova-ruta__paso::before, .ova-ruta--iconos .ova-ruta__paso:nth-child(even)::before { left: 30px; }
-  .ova-ruta--iconos .ova-ruta__num, .ova-ruta--iconos .ova-ruta__paso:nth-child(even) > .ova-ruta__num { left: 30px; top: 46px; }
-  .ova-ruta--iconos .ova-ruta__paso:first-child::before { top: 46px; }
-  .ova-ruta--iconos .ova-ruta__paso:last-child::before { height: 46px; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:not(:first-child)::before { top: 0; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso::after { display: none; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:nth-child(even) > .ova-ruta__texto { order: 0; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__num, .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:nth-child(even) > .ova-ruta__num {
+    left: 22px; right: auto; top: 40px; transform: translate(-50%, -50%);
+  }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:first-child::before { top: 40px; }
+  .ova-ruta:not(.ova-ruta--texto) .ova-ruta__paso:last-child::before { bottom: auto; height: 40px; }
+  /* Ruta de texto y ruta con iconos: el zigzag sigue, estrecho. El número alterna de lado, el texto se
+     alinea hacia él y la línea es la misma de escritorio. La columna de texto ocupa todo el ancho en todos
+     los pasos (así la mide medir-pantalla); el sitio del número lo deja cada bloque de texto con su
+     relleno, a la izquierda en los impares y a la derecha en los pares, y al texto le queda el ancho de la
+     columna menos ese lado (KIT-012 T4, D3 y D10). */
+  .ova-ruta--texto .ova-ruta__paso { padding: 24px 0; }
+  .ova-ruta--texto .ova-ruta__paso > .ova-ruta__texto > * { padding-left: 64px; }
+  .ova-ruta--texto .ova-ruta__paso:nth-child(even) > .ova-ruta__texto > * { padding-left: 0; padding-right: 64px; }
+  .ova-ruta--iconos .ova-ruta__paso > .ova-ruta__texto > * { padding-left: 80px; }
+  .ova-ruta--iconos .ova-ruta__paso:nth-child(even) > .ova-ruta__texto > * { padding-left: 0; padding-right: 80px; }
 }
 
 /* Ruta de inicio a meta (.ova-trayecto): la línea serpentea por filas. Cada fila es una caja que va
@@ -1457,4 +1583,16 @@
    las estila y les da su comportamiento, y la piel las viste. El catálogo
    solo suma el contexto opcional de la pregunta.
    ========================================================= */
-.ova-quiz__contexto { margin: 0 0 18px; max-width: 66ch; }
+.ova-quiz__contexto { margin: 0 0 18px; }   /* sin tope: la columna de lectura (2026-10-26) */
+
+/* =========================================================
+   Botón de ventana modal (KIT-006): el botón de contorno al inicio del texto y su
+   ventana. Con «Imagen sugerida», la imagen va arriba del texto, a todo el ancho, y la
+   ventana se abre a 900 px; sin ella, la ventana del motor (560 px).
+   ========================================================= */
+.ova-ventana { margin: 8px 0 40px; }
+.ova-ventana__boton { text-align: left; }
+.ova-ventana__figura { margin: 0 0 20px; border-radius: var(--r-md); overflow: hidden; }
+.ova-ventana__figura img { display: block; width: 100%; height: auto; }
+.ova-modal__dialog:has(.ova-ventana__figura) { max-width: min(900px, 94vw); }
+.ova-ventana .ova-modal__body > :last-child { margin-bottom: 0; }

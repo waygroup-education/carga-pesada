@@ -136,12 +136,55 @@
    Envuelve cada línea del <code> en .ova-codigo__linea (el número lo pone
    catalogo.css). data-ova-resaltar="5,8" en la figura marca esas líneas. Si
    una etiqueta cruza de una línea a otra, el bloque se deja sin numerar.
+   La cabecera trae el botón «Copiar código»: copia el código sin los números y
+   dice «Copiado» con un visto durante 2 s. Si el portapapeles no responde (un
+   curso abierto como archivo), el botón no cambia y la pantalla sigue igual.
    ========================================================= */
 (function () {
   'use strict';
+  const COPIAR = 'Copiar código', COPIADO = 'Copiado';
+  function texto(code) {
+    const lineas = code.querySelectorAll('.ova-codigo__linea');
+    return lineas.length ? [...lineas].map(l => l.textContent).join('\n') : code.textContent.replace(/\n$/, '');
+  }
+  function copiar(t) {
+    const viejo = () => {
+      const area = document.createElement('textarea');
+      area.value = t; area.setAttribute('readonly', ''); area.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(area); area.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      area.remove();
+      return ok ? Promise.resolve() : Promise.reject(new Error('copy'));
+    };
+    return navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t).catch(viejo) : viejo();
+  }
+  function boton(fig, code) {
+    const cab = fig.querySelector('figcaption');
+    if (!cab || cab.querySelector('.ova-codigo__copiar')) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ova-codigo__copiar'; b.setAttribute('aria-label', COPIAR);
+    b.innerHTML = '<iconify-icon icon="mdi:content-copy" aria-hidden="true"></iconify-icon><span class="ova-codigo__copiar-texto">' + COPIAR + '</span>';
+    const rotulo = b.querySelector('.ova-codigo__copiar-texto'), icono = b.querySelector('iconify-icon');
+    let reloj;
+    b.addEventListener('click', () => {
+      copiar(texto(code)).then(() => {
+        clearTimeout(reloj);
+        b.classList.add('is-copiado'); b.setAttribute('aria-label', COPIADO);
+        rotulo.textContent = COPIADO; icono.setAttribute('icon', 'mdi:check');
+        reloj = setTimeout(() => {
+          b.classList.remove('is-copiado'); b.setAttribute('aria-label', COPIAR);
+          rotulo.textContent = COPIAR; icono.setAttribute('icon', 'mdi:content-copy');
+        }, 2000);
+      }, () => {});
+    });
+    cab.appendChild(b);
+  }
   function armar(fig) {
     const code = fig.querySelector('pre > code');
-    if (!code || code.dataset.ovaLineas) return;
+    if (!code) return;
+    boton(fig, code);
+    if (code.dataset.ovaLineas) return;
     code.dataset.ovaLineas = '1';
     const lineas = code.innerHTML.replace(/\n$/, '').split('\n');
     const abre = l => (l.match(/<span\b/g) || []).length, cierra = l => (l.match(/<\/span>/g) || []).length;
@@ -472,6 +515,185 @@
   const iniciar = () => {
     vigilar();
     new MutationObserver(vigilar).observe(document.body, { childList: true, subtree: true });
+  };
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
+})();
+
+/* =========================================================
+   ILUSTRACIÓN AMPLIABLE EN EL CELULAR (.ova-ilustracion, 2026-10-25)
+   En pantallas de hasta 720 px los rótulos de una ilustración quedan ilegibles: el SVG escala
+   con el ancho. Cada ilustración lleva una lupa (oculta en escritorio por catalogo.css); al
+   tocarla, o al tocar la imagen, se abre la ventana del motor (.ova-modal, con su foco, Esc y
+   cerrar) con la ilustración a 1000 px, centrada, que se recorre con el dedo.
+   ========================================================= */
+(() => {
+  'use strict';
+
+  const MOVIL = window.matchMedia('(max-width: 720px)');
+  const ID = 'ova-ampliada';
+  let lienzo = null;
+
+  function ventana() {
+    if (lienzo) return lienzo;
+    const modal = document.createElement('div');
+    modal.className = 'ova-modal ova-ampliada';
+    modal.id = ID;
+    modal.innerHTML =
+      '<div class="ova-modal__dialog" aria-label="Ilustración ampliada">' +
+        '<div class="ova-modal__head"><span></span>' +
+          '<button class="ova-modal__close" data-ova-modal-close aria-label="Cerrar">' +
+          '<iconify-icon icon="mdi:close"></iconify-icon></button></div>' +
+        '<div class="ova-modal__body"><div class="ova-ampliada__lienzo"></div></div>' +
+      '</div>';
+    document.body.appendChild(modal);
+    lienzo = modal.querySelector('.ova-ampliada__lienzo');
+    return lienzo;
+  }
+
+  const vistas = new WeakSet();
+  function preparar() {
+    document.querySelectorAll('.ova-ilustracion').forEach(fig => {
+      if (vistas.has(fig) || fig.closest('.ova-modal')) return;
+      const img = fig.querySelector('img');
+      if (!img) return;
+      vistas.add(fig);
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'ova-ampliar';
+      boton.dataset.ovaModalOpen = ID;
+      boton.setAttribute('aria-label', 'Ampliar la ilustración');
+      boton.innerHTML = '<iconify-icon icon="mdi:magnify-plus-outline"></iconify-icon>';
+      // Llena la ventana antes de que el motor la abra (el clic sube después hasta document)
+      boton.addEventListener('click', () => {
+        const copia = img.cloneNode();
+        copia.removeAttribute('loading');
+        const l = ventana();
+        l.replaceChildren(copia);
+        const centrar = () => { l.scrollLeft = (l.scrollWidth - l.clientWidth) / 2; };
+        requestAnimationFrame(() => requestAnimationFrame(centrar));
+        copia.addEventListener('load', centrar, { once: true });
+      });
+      img.addEventListener('click', () => { if (MOVIL.matches) boton.click(); });
+      fig.appendChild(boton);
+    });
+  }
+
+  const iniciar = () => {
+    ventana();
+    preparar();
+    new MutationObserver(preparar).observe(document.body, { childList: true, subtree: true });
+  };
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
+})();
+
+/* =========================================================
+   COPIAR CÓDIGO ([data-ova-copiar])
+   En la ventana «Ver código» de la plantilla-base, copia el bloque de
+   código de su misma ventana y confirma en el botón por un momento.
+   ========================================================= */
+(() => {
+  'use strict';
+  const copiar = texto => (navigator.clipboard && window.isSecureContext
+    ? navigator.clipboard.writeText(texto)
+    : new Promise((ok, falla) => {
+      const area = Object.assign(document.createElement('textarea'), { value: texto });
+      area.setAttribute('readonly', '');
+      Object.assign(area.style, { position: 'fixed', opacity: '0' });
+      document.body.appendChild(area);
+      area.select();
+      const hecho = document.execCommand('copy');
+      area.remove();
+      hecho ? ok() : falla();
+    }));
+
+  document.addEventListener('click', e => {
+    const boton = e.target.closest('[data-ova-copiar]');
+    if (!boton) return;
+    const codigo = boton.closest('.ova-modal')?.querySelector('pre code');
+    if (!codigo) return;
+    const original = boton.innerHTML;
+    copiar(codigo.textContent).then(
+      () => { boton.innerHTML = '<iconify-icon icon="mdi:check"></iconify-icon> Copiado'; },
+      () => { boton.textContent = 'No se pudo copiar'; });
+    clearTimeout(boton._ovaCopiado);
+    boton._ovaCopiado = setTimeout(() => { boton.innerHTML = original; }, 1800);
+  });
+})();
+
+/* =========================================================
+   INDICIO DE DESPLAZAMIENTO (KIT-012, D4 · D7 · D11)
+   La ilustración ampliada (.ova-ampliada__lienzo), el bloque de código (.ova-codigo pre) y la
+   tabla APA (.ova-apa-tabla .ova-tabla) se desplazan en horizontal cuando no caben, y la barra
+   nativa del sistema no lo avisa (en iOS solo aparece al tocar). El motor pone encima de cada
+   contenedor que desborda un indicio propio: una barra fina proporcional (ancho visible sobre
+   total, en la posición desplazada) y un degradado en el borde por donde sigue el contenido, que
+   se apaga al llegar a ese extremo. Visible desde que la pieza se ve o se abre, sin interacción.
+   El color sale de --ova-indicio-barra y --ova-indicio-fondo (catalogo.css). La galería no entra:
+   conserva su propio indicio.
+   ========================================================= */
+(() => {
+  'use strict';
+
+  const SEL = '.ova-ampliada__lienzo, .ova-codigo pre, .ova-apa-tabla .ova-tabla';
+
+  // Proporción de la barra y extremos del recorrido (pura; tests/catalogo-indicio.test.js la extrae).
+  function indicioProporcion(scrollWidth, clientWidth, scrollLeft) {
+    const desborda = scrollWidth > clientWidth + 1;
+    return {
+      desborda,
+      ancho: desborda ? clientWidth / scrollWidth : 1,
+      inicio: desborda ? scrollLeft / scrollWidth : 0,
+      alInicio: scrollLeft <= 1,
+      alFin: scrollLeft + clientWidth >= scrollWidth - 1,
+    };
+  }
+
+  const indicios = new WeakMap();
+  const observadas = new WeakSet();
+
+  function indicioDe(el) {
+    let o = indicios.get(el);
+    if (o) return o;
+    o = document.createElement('div');
+    o.className = 'ova-indicio';
+    o.setAttribute('aria-hidden', 'true');
+    o.innerHTML = '<div class="ova-indicio__pista"><span class="ova-indicio__barra"></span></div>';
+    el.parentElement.appendChild(o);
+    indicios.set(el, o);
+    el.addEventListener('scroll', () => actualizar(el), { passive: true });
+    new ResizeObserver(() => actualizar(el)).observe(el);
+    return o;
+  }
+
+  function actualizar(el) {
+    if (!el.parentElement) return;
+    const o = indicioDe(el);
+    // Las imágenes que llegan después (la ampliada clona la suya al abrirse) cambian el ancho total.
+    el.querySelectorAll('img').forEach(img => {
+      if (observadas.has(img)) return;
+      observadas.add(img);
+      img.addEventListener('load', () => actualizar(el), { once: true });
+    });
+    if (!el.offsetParent) { o.removeAttribute('data-ova-desborda'); return; }
+    o.style.top = el.offsetTop + 'px';
+    o.style.left = el.offsetLeft + 'px';
+    o.style.width = el.offsetWidth + 'px';
+    o.style.height = el.offsetHeight + 'px';
+    const p = indicioProporcion(el.scrollWidth, el.clientWidth, el.scrollLeft);
+    o.toggleAttribute('data-ova-desborda', p.desborda);
+    o.toggleAttribute('data-ova-inicio', p.alInicio);
+    o.toggleAttribute('data-ova-fin', p.alFin);
+    const barra = o.querySelector('.ova-indicio__barra');
+    barra.style.width = (p.ancho * 100) + '%';
+    barra.style.left = (p.inicio * 100) + '%';
+  }
+
+  const todos = () => document.querySelectorAll(SEL).forEach(actualizar);
+  const iniciar = () => {
+    todos();
+    // Lo que aparece después (la ventana ampliada, su imagen) y lo que se abre (clase is-open).
+    new MutationObserver(todos).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', todos);
   };
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', iniciar) : iniciar();
 })();
